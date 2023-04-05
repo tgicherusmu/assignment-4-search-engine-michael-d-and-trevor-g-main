@@ -5,3 +5,4 @@
 //docNameSeInsert takes a string called word as an argument and puts it in DocNamesSet
 //docNamesMapInsert takes a string called word and an integer called freq as its arguments and inserts them in to DocNames
 
+
