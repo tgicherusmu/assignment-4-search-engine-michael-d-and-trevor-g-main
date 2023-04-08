@@ -1,5 +1,3 @@
-
-
 //#include "DocumentParser.h"
 #include <fstream>
 #include <iostream>

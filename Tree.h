@@ -7,8 +7,8 @@
  //the functions rotateWithLeftChild rotateWithRightChild doubleWithLeftChild and doubleWithRightChild are private helper function tha tperform one of four rotataion operations on a subtree rooted at a given node
 
  
-#ifndef INC_21F_SRCH_NGN_CULLENW_TREE_H
-#define INC_21F_SRCH_NGN_CULLENW_TREE_H
+#ifndef TREE_H
+#define TREE_H
 
 #include <iostream>
 #include<vector>
@@ -168,4 +168,4 @@ public:
     }
 };
 
-#endif //INC_21F_SRCH_NGN_CULLENW_TREE_H
+#endif //TREE_H
