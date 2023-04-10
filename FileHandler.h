@@ -25,12 +25,12 @@ class FileHandler {
 
     };
 
-    IndexHandler i;
-    DocumentParser doc;
-    QueryEngine q;
+    // IndexHandler i;
+    // DocumentParser doc;
+    // QueryEngine q;
 
-    set<string> intersect;
-    set<docWithMetrc> top15;
+    // set<string> intersect;
+    // set<docWithMetrc> top15;
     int numFiles;
 
     string mainWord;
@@ -51,18 +51,18 @@ public:
     void outputResults();
     void getTop50Words();
 
-    int getNumWords(){ return i.getNumWords();};
-    int getTreeSize(){return i.getTreeSize();};
-    int getNumUniquePersons(){return i.getUniquePersons();};
-    int getNumUniqueOrgs(){return i.getUniqueOrgs();};
+    // int getNumWords(){ return i.getNumWords();};
+    // int getTreeSize(){return i.getTreeSize();};
+    // int getNumUniquePersons(){return i.getUniquePersons();};
+    // int getNumUniqueOrgs(){return i.getUniqueOrgs();};
 
-    void loadPersonIndex(){ i.loadPersistenceFileIndexPersons();};
-    void loadOrgsIndex(){ i.loadPersistenceFileIndexOrgs();};
-    void loadWordsIndex(){ i.loadPersistenceFileIndexWords();};
+    // void loadPersonIndex(){ i.loadPersistenceFileIndexPersons();};
+    // void loadOrgsIndex(){ i.loadPersistenceFileIndexOrgs();};
+    // void loadWordsIndex(){ i.loadPersistenceFileIndexWords();};
 
-    void savePersonIndex(){ i.savePersistenceFileIndexPersons();};
-    void saveOrgIndex(){ i.savePersistenceFileIndexOrgs();};
-    void saveWordIndex(){ i.savePersistenceFileIndexWords();};
+    // void savePersonIndex(){ i.savePersistenceFileIndexPersons();};
+    // void saveOrgIndex(){ i.savePersistenceFileIndexOrgs();};
+    // void saveWordIndex(){ i.savePersistenceFileIndexWords();};
 
     void setNumFiles(const int a){numFiles = a;};
     void setMainWord(const string a){mainWord = a;};
@@ -71,7 +71,7 @@ public:
     void clear();
 
     void viewDoc(const int);
-    void clearTop15(){ top15.clear();}
+    // void clearTop15(){ top15.clear();}
 };
 
 

@@ -4,20 +4,20 @@
 
 using namespace std;
 
-void DocumentParser::changeFile(string fileName)
+// void DocumentParser::changeFile(string fileName)
 
-void DocumentParser::parseDoc()
+// void DocumentParser::parseDoc()
 
-string DocumentParser::getText()
+// string DocumentParser::getText()
 
-string DocumentParser::getTextBlurb()
+// string DocumentParser::getTextBlurb()
 
-string DocumentParser::getTitle()
+// string DocumentParser::getTitle()
 
-string DocumentParser::getPublishDate()
+// string DocumentParser::getPublishDate()
 
-string DocumentParser::getURL()
+// string DocumentParser::getURL()
 
-string DocumentParser::getPerson();
+// string DocumentParser::getPerson();
 
-string DocumentParser::getOrgs();
+// string DocumentParser::getOrgs();

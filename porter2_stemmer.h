@@ -45,12 +45,12 @@ bool isVowel(char ch);
 
 bool isVowelY(char ch);
 
-bool endsWith(meta::util::string_view word, meta::util::string_view str);
+// bool endsWith(meta::util::string_view word, meta::util::string_view str);
 
-bool endsInDouble(const std::string& word);
+// bool endsInDouble(const std::string& word);
 
-bool replaceIfExists(std::string& word, meta::util::string_view suffix,
-                     meta::util::string_view replacement, size_t start);
+// bool replaceIfExists(std::string& word, meta::util::string_view suffix,
+//                      meta::util::string_view replacement, size_t start);
 
 bool isValidLIEnding(char ch);
 
