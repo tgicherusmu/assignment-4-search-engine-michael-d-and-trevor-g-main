@@ -88,9 +88,9 @@ void IndexHandler::getTop50Words(){
 
 set<string>* IndexHandler::getDocsFromTree(const string&word){
     IndexEntry* result= TreeIndex.getElement(IndexEntry(word));
-    if(result==nullptr){
+    if(result==NULL){
         //cout<<"No docs for that word found ("<<word<<") \n";
-        return nullptr;
+        return NULL;
     }
     else{
        //cout<<*result<<endl;
@@ -102,7 +102,7 @@ set<string>* IndexHandler::getDocsFromTree(const string&word){
 // set<string>* IndexHandler::getDocsFromHashPerson(const string&word){
 //     //cout<<word<<" (PERSON)"<<endl;
 
-//     if(hashTablePersons.get(word)!=nullptr){
+//     if(hashTablePersons.get(word)!=NULL){
 //         set<string>& a = *hashTablePersons.get(word);
 
 //         /*for(const auto& e: a){
@@ -117,7 +117,7 @@ set<string>* IndexHandler::getDocsFromTree(const string&word){
 // }
 // set<string>* IndexHandler::getDocsFromHashOrgs(const string&word){
 //     //cout<<word<<" (ORG)"<<endl;
-//     if(hashTableOrgs.get(word)!=nullptr){
+//     if(hashTableOrgs.get(word)!=NULL){
 //         set<string>& a = *hashTableOrgs.get(word);
 
 //         /*for(const auto& e: a){

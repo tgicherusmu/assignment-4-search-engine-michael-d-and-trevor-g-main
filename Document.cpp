@@ -11,16 +11,16 @@
 
 #include <fstream>
 #include<iostream>
-#include "DocumentParser.h"
+#include "Document.h"
 #include <sstream>
 #include <algorithm>
 using namespace std;
 
-void DocumentParser::changeFile(string c){
+void Document::changeFile(string c){
     FileName = c;
     parseDoc();
 }
-void DocumentParser::parseDoc(){
+void Document::parseDoc(){
     // read in file
     ifstream f(FileName);
 
@@ -32,10 +32,10 @@ void DocumentParser::parseDoc(){
     d.ParseStream(wrap);
 
 }
-string DocumentParser::getText(){
+string Document::getText(){
     return d["text"].GetString();
 }
-string DocumentParser::getTextBlurb(){
+string Document::getTextBlurb(){
     string temp = d["text"].GetString();
     string temp2, blurb;
 
@@ -61,16 +61,16 @@ string DocumentParser::getTextBlurb(){
     }
     return blurb+"...";
 }
-string DocumentParser::getTitle(){
+string Document::getTitle(){
     return d["title"].GetString();
 }
-string DocumentParser::getPublishDate(){
+string Document::getPublishDate(){
     return d["published"].GetString();
 }
-string DocumentParser::getSite(){
+string Document::getSite(){
     return d["url"].GetString();
 }
-list<string> DocumentParser::getPersons(){
+list<string> Document::getPersons(){
     list<string> persons;
     for (rapidjson::Value::ConstValueIterator itr = d["entities"].GetObject()["persons"].Begin(); itr != d["entities"].GetObject()["persons"].End(); ++itr){
         persons.emplace_back(itr->GetObject()["name"].GetString());
@@ -78,7 +78,7 @@ list<string> DocumentParser::getPersons(){
 
    return persons;
 }
-list<string> DocumentParser::getOrgs(){
+list<string> Document::getOrgs(){
     list<string> orgs;
     for (rapidjson::Value::ConstValueIterator itr = d["entities"].GetObject()["organizations"].Begin(); itr != d["entities"].GetObject()["organizations"].End(); ++itr){
         orgs.emplace_back(itr->GetObject()["name"].GetString());

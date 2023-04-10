@@ -177,7 +177,7 @@ public:
 
     //! Destructor.
     ~GenericPointer() {
-        if (nameBuffer_)    // If user-supplied tokens constructor is used, nameBuffer_ is nullptr and tokens_ are not deallocated.
+        if (nameBuffer_)    // If user-supplied tokens constructor is used, nameBuffer_ is NULL and tokens_ are not deallocated.
             Allocator::Free(tokens_);
         RAPIDJSON_DELETE(ownAllocator_);
     }

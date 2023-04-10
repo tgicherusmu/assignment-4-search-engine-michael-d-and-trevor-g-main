@@ -5,7 +5,6 @@
 #include "porter2_stemmer.h"
 #include"IndexEntry.h"
 #include <vector>
-#include "HashTable.h"
 #include<list>
 #include <set>
 #include<fstream>
@@ -15,7 +14,7 @@
 #include<unordered_map>
 class IndexHandler {
 private:
-    Tree<IndexEntry> TreeIndex;
+    AvlTree<IndexEntry> TreeIndex;
     // HashTable<string, string> hashTablePersons;
     // HashTable<string, string> hashTableOrgs;
     int numWords=0;
@@ -31,9 +30,10 @@ public:
 
     // get sets
     set<string>* getDocsFromTree(const string&);
-    set<string>* getDocsFromHashPerson(const string&word);
-    set<string>* getDocsFromHashOrgs(const string&word);
-
+    //set<string>* getDocsFromHashPerson(const string&word);
+    //set<string>* getDocsFromHashOrgs(const string&word);
+    int size;
+    int getSize(){ return size;}
     int getNumWords(){return numWords;}
     int getTreeSize(){
         treeSize = TreeIndex.getSize();

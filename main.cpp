@@ -196,17 +196,17 @@ void getSearch(){
                 break;
             }
             // get next word if it's an identifier
-            case 1:{
-                // can't use alone
-                getline(ss,word,' ');
-                files.queryHashPersons(word);
-                break;
-            }
-            case 2:{
-                getline(ss,word,' ');
-                files.queryHashOrgs(word);
-                break;
-            }
+            // case 1:{
+            //     // can't use alone
+            //     getline(ss,word,' ');
+            //     files.queryHashPersons(word);
+            //     break;
+            // }
+            // case 2:{
+            //     getline(ss,word,' ');
+            //     files.queryHashOrgs(word);
+            //     break;
+            // }
             case 3:{
                 getline(ss,word,' ');
                 files.queryTreeNotWords(word);

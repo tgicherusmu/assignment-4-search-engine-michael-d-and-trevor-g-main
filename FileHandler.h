@@ -2,9 +2,8 @@
 #define FILEHANDLER_H
 
 #include "IndexHandler.h"
-#include "DocumentParser.h"
+#include "Document.h"
 #include "Tree.h"
-#include "DocumentParser.h"
 #include"IndexHandler.h"
 #include "QueryEngine.h"
 //#include "../rapidjson/document.h"
@@ -26,7 +25,7 @@ class FileHandler {
     };
 
     // IndexHandler i;
-    // DocumentParser doc;
+    // Document doc;
     // QueryEngine q;
 
     // set<string> intersect;
@@ -43,8 +42,8 @@ public:
     // get results from tree
     void queryTreeWords(string, int count, const int&);
     void queryTreeNotWords(const string&);
-    void queryHashPersons(const string&);
-    void queryHashOrgs(const string&);
+    // void queryHashPersons(const string&);
+    // void queryHashOrgs(const string&);
 
 
     // output resulting set

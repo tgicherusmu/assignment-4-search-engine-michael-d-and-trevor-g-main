@@ -1,171 +1,340 @@
-//a tree called Node represents a node in the lubrary search tree
-//the class has a pointer to the root node of the binary search tree and an integer representing its class
-//the function height will take a pointer to a node and its argument will to return its height and the pointer null will return -1 
-//the function max will take two integers as its arguments and return the maximum of them
-//the function insert takes an element of type T as its argument and iserts it into a binary seach tree. if the element already exists it will return reference to it otherwise it will create a new node with this element and insert it into the appropreiate pistion in the tree
-//the function balanace take sapointer to a node as its argument and balaces of the subtree rooted at this ode using only one of 4 rotation operations
- //the functions rotateWithLeftChild rotateWithRightChild doubleWithLeftChild and doubleWithRightChild are private helper function tha tperform one of four rotataion operations on a subtree rooted at a given node
-
- 
 #ifndef TREE_H
 #define TREE_H
 
+#define DEBUG
+
+#include <stdexcept>
+#include <algorithm>
 #include <iostream>
-#include<vector>
+
 using namespace std;
-template<typename T>
-class Tree {
+
+// AvlTree class
+// This implementation is based on the unbalanced binary search tree and adds hight information 
+// to the nodes and a balance function to perform the needed rotations.
+
+template <typename Comparable>
+class AvlTree
+{
 private:
-    class Node{
-    public:
-        T element;
-        Node *left;
-        Node *right;
-        int height;
-        Node(const T& theElement,Node *lt=nullptr,Node *rt=nullptr,int h = 0 ):
-                element( theElement ), left( lt ), right( rt ), height( h ) { }
+    struct AvlNode
+    {
+        Comparable key;
+        AvlNode *left;
+        AvlNode *right;
+        int height;      // AVL tree: keeping track of the height is the differnce to a unbalanced binary search tree
+
+        AvlNode(const Comparable &theKey, AvlNode *lt, AvlNode *rt, int h)
+            : key{theKey}, left{lt}, right{rt}, height{h} {}
     };
-    Node *root;
-    int size;
-    // get height of -1 if nullptr
-    int height(Node* v){
-        if(v==nullptr)
-            return -1;
-        return v->height;
-    }
-    // get max two num
-    int max(int a, int b){
-        return a > b ? a : b;
+
+    AvlNode *root;
+
+public:
+    /**
+     * @brief Default constructor
+     */
+    AvlTree() : root{NULL}
+    {
     }
 
-    T& insert(const T& x, Node*& curr){
-        if(curr==nullptr){
-            size++;
-            curr = new Node(x); // add node
-        }
-        else if(x < curr->element)
-            return insert(x, curr->left); // descend left child
-        else if(curr->element < x)
-            return insert(x, curr->right); // descend right child
-        else if(x == curr->element)
-            return curr->element;
-        balance(curr);
-        return curr->element;
+    /**
+     * @brief Rule-of-3 Part 1: Copy constructor uses internal function clone().
+     *
+     */
+    AvlTree(const AvlTree &rhs) : root{NULL}
+    {
+        root = clone(rhs.root);
     }
-    void balance(Node*& t){
-        if(t==nullptr)
+
+    /**
+     * @brief Rule-of-3 Part 2: Destroy the Binary Search Tree object using the internal
+     *   function makeEmpty().
+     */
+    ~AvlTree()
+    {
+        makeEmpty();
+    }
+
+    /**
+     * @brief Rule-of-3 Part 1: Copy constructor uses internal function clone().
+     */
+    AvlTree &operator=(const AvlTree &rhs)
+    {
+        makeEmpty();
+        root = clone(rhs.root);
+        return *this;
+    }
+
+    //int size;
+    int getSize(){ return int size;}
+    /**
+     * Returns true if x is found in the tree.
+     */
+    bool contains(const Comparable &x) const
+    {
+        return contains(x, root);
+    }
+
+    /**
+     * Test if the tree is logically empty.
+     * Return true if empty, false otherwise.
+     */
+    bool isEmpty() const
+    {
+        return root == NULL;
+    }
+
+
+    /**
+     * Print the tree structure.
+     */
+    void prettyPrintTree() const
+    {
+        prettyPrintTree("", root, false);
+    }
+
+    /**
+     * Make the tree empty.
+     */
+    void makeEmpty()
+    {
+        makeEmpty(root);
+    }
+
+    /**
+     * Insert x into the tree; duplicates are ignored.
+     */
+    void insert(const Comparable &x)
+    {
+        insert(x, root);
+    }
+
+    /**
+     * Remove x from the tree. Nothing is done if x is not found.
+     */
+    void remove(const Comparable &x)
+    {
+        remove(x, root);
+    }
+
+private:
+    /**
+     * Internal method to insert into a subtree.
+     * x is the item to insert.
+     * t is the node that roots the subtree.
+     * Set the new root of the subtree.
+     */
+    void insert(const Comparable &x, AvlNode *&t)
+    {
+        if (t == NULL)
+        {
+            t = new AvlNode{x, NULL, NULL, 0};
+            return; // a single node is always balanced
+        }
+
+        if (x < t->key)
+            insert(x, t->left);
+        else if (t->key < x)
+            insert(x, t->right);
+        else
+        {
+        } // Duplicate; do nothing
+
+        // This will call balance on the way back up the tree. It will only balance
+        // once at node the where the tree got imbalanced (called node alpha in the textbook)
+        // and update the height all the way back up the tree.
+        balance(t);
+    }
+
+    /**
+     * Internal method to remove from a subtree.
+     * x is the item to remove.
+     * t is the node that roots the subtree.
+     * Set the new root of the subtree.
+     */
+    void remove(const Comparable &x, AvlNode *&t)
+    {
+        throw std::runtime_error("Not implemented yet!");
+        // same as in a binary search tree
+
+        // don't forget to balance the AVL tree!
+        balance(t);
+    }
+
+    /**
+     * Internal method to make subtree empty.
+     */
+    void makeEmpty(AvlNode *&t)
+    {
+        if (t == NULL)
             return;
-        // case 1 or 2 rotation
-        if(height(t->left)-height(t->right)>1){
-            if(height(t->left->left)>=height(t->left->right))
-                rotateWithLeftChild(t); //c1
-            else
-                doubleWithLeftChild(t); //c2
-        }
-        else if(height(t->right)-height(t->left)>1){
-            if(height(t->right->right)>=height(t->right->left))
-                rotateWithRightChild(t); // c4
-            else
-                doubleWithRightChild(t); //c3
-        }
-        t->height = max(height(t->left),height(t->right))+1;
+
+        makeEmpty(t->left);
+        makeEmpty(t->right);
+        delete t;
+        t = NULL;
     }
-    // rotations
-    void rotateWithLeftChild(Node*& k2){
-        Node* k1 = k2->left;
+
+    /**
+     * Internal method to clone subtree.
+     */
+    AvlNode *clone(AvlNode *t) const
+    {
+        if (t == NULL)
+            return NULL;
+
+        return new AvlNode{t->key, clone(t->left), clone(t->right), t->height};
+    }
+
+
+    /**
+     * Pretty print the tree structure
+     * Uses preorder traversal with R and L swapped (NRL)
+     *
+     * Modified from: https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
+     */
+    void prettyPrintTree(const std::string &prefix, const AvlNode *node, bool isRight) const
+    {
+        if (node == NULL)
+            return;
+
+        std::cout << prefix;
+        // Note: this uses unicode characters for the tree structure. They might not print correctly on 
+        // all systems (Windows!?!) and all types of output devices.
+        std::cout << (isRight ? "├──" : "└──");
+        // print the value of the node
+        std::cout << node->key << std::endl;
+
+        // enter the next tree level - left and right branch
+        prettyPrintTree(prefix + (isRight ? "│   " : "    "), node->right, true);
+        prettyPrintTree(prefix + (isRight ? "│   " : "    "), node->left, false);
+    }
+
+    // Balancing: AVL Rotations
+
+    /**
+     * Return the height of node t or -1 if NULL.
+     */
+    int height(AvlNode *t) const
+    {
+        return t == NULL ? -1 : t->height;
+    }
+
+    static const int ALLOWED_IMBALANCE = 1; // 1 is the default; more will make balancing cheaper
+                                            // but the search less efficient.
+
+    // Assume t is balanced or within one of being balanced since we check this after each manipulation
+    // t represents alpha in the textbook
+    void balance(AvlNode *&t)
+    {
+        if (t == NULL)
+            return;
+
+        if (height(t->left) - height(t->right) > ALLOWED_IMBALANCE) // unbalancing insertion was left
+        {
+            if (height(t->left->left) >= height(t->left->right))
+                rotateWithLeftChild(t); // case 1 (outside)
+            else
+                doubleWithLeftChild(t); // case 2 (inside)
+        }
+        else if (height(t->right) - height(t->left) > ALLOWED_IMBALANCE) // unbalancing insertion was right
+        {
+            if (height(t->right->right) >= height(t->right->left))
+                rotateWithRightChild(t); // case 4 (outside)
+            else
+                doubleWithRightChild(t); // case 3 (inside)
+        }
+
+        // update height
+        t->height = max(height(t->left), height(t->right)) + 1;
+    }
+
+    int max(int lhs, int rhs) const
+    {
+        return lhs > rhs ? lhs : rhs;
+    }
+
+    /**
+     * Rotate binary tree node with left child.
+     * For AVL trees, this is a single rotation for case 1.
+     * Update heights, then set new root.
+     */
+    void rotateWithLeftChild(AvlNode *&k2)
+    {
+#ifdef DEBUG
+        cout << "need to rotateWithLeftChild for node " << k2->key << endl;
+        cout << "Before:" << endl;
+        prettyPrintTree();
+#endif
+
+        AvlNode *k1 = k2->left;
         k2->left = k1->right;
         k1->right = k2;
-        k2->height = max(height(k2->left),height(k2->right))+1;
-        k1->height = max(height(k1->left),k2->height)+1;
-        k2=k1;
+        k2->height = max(height(k2->left), height(k2->right)) + 1;
+        k1->height = max(height(k1->left), k2->height) + 1;
+        k2 = k1;
+#ifdef DEBUG
+        cout << "After:" << endl;
+        prettyPrintTree();
+#endif
     }
-    void rotateWithRightChild(Node*& k1){
-        Node* k2 = k1->right;
+
+    /**
+     * Rotate binary tree node with right child.
+     * For AVL trees, this is a single rotation for case 4.
+     * Update heights, then set new root.
+     */
+    void rotateWithRightChild(AvlNode *&k1)
+    {
+#ifdef DEBUG
+        cout << "need to rotateWithRightChild for node " << k1->key << endl;
+        cout << "Before:" << endl;
+        prettyPrintTree();
+
+#endif
+
+        AvlNode *k2 = k1->right;
         k1->right = k2->left;
         k2->left = k1;
-        k1->height = max(height(k1->left),height(k1->right))+1;
-        k2->height = max(height(k2->right),k1->height)+1;
+        k1->height = max(height(k1->left), height(k1->right)) + 1;
+        k2->height = max(height(k2->right), k1->height) + 1;
         k1 = k2;
+#ifdef DEBUG
+        cout << "After:" << endl;
+        prettyPrintTree();
+#endif
     }
-    void doubleWithLeftChild(Node*& k3){
+
+    /**
+     * Double rotate binary tree node: first left child.
+     * with its right child; then node k3 with new left child.
+     * For AVL trees, this is a double rotation for case 2.
+     * Update heights, then set new root.
+     */
+    void doubleWithLeftChild(AvlNode *&k3)
+    {
+#ifdef DEBUG
+        cout << "doubleWithLeftChild" << endl;
+#endif
         rotateWithRightChild(k3->left);
         rotateWithLeftChild(k3);
     }
-    void doubleWithRightChild(Node*& k1){
+
+    /**
+     * Double rotate binary tree node: first right child.
+     * with its left child; then node k1 with new right child.
+     * For AVL trees, this is a double rotation for case 3.
+     * Update heights, then set new root.
+     */
+    void doubleWithRightChild(AvlNode *&k1)
+    {
+#ifdef DEBUG
+        cout << "doubleWithRightChild" << endl;
+#endif
         rotateWithLeftChild(k1->right);
         rotateWithRightChild(k1);
     }
-
-    T* getElement(const T& x, Node*& curr){
-        if(curr==nullptr)
-            return nullptr; // doesn't exist
-        if(x < curr->element)
-            return getElement(x, curr->left); // descend left child
-        else if(curr->element < x)
-            return getElement(x, curr->right); // descend right child
-        else if(curr->element == x)
-            return &curr->element; // exists
-        else    return nullptr;
-    }
-    // check if copy is called
-    Tree(const Tree &rhs): root(nullptr) { *this = rhs; }
-    // to clear tree
-    void emptyTree(Node* n){
-        if(n!=nullptr){
-            emptyTree(n->left);
-            emptyTree(n->right);
-            delete n;
-        }
-    }
-    void output(Node* n){
-        if(n!=nullptr){
-            output(n->left);
-            allElements.push_back(n->element);
-            output(n->right);
-        }
-    }
-    void print(ostream& out, Node* n)const{
-        if(n!=nullptr){
-            out<<n->element;
-            print(out,n->left);
-            print(out,n->right);
-        }
-    }
-
-public:
-    // default constructor
-    Tree(): root(nullptr), size(0) {}
-    // destructor
-    ~Tree() {
-        emptyTree(root);
-    }
-
-    // public interface functions
-    T& insert(const T &x) {
-        return insert(x, root);
-    }
-    T* getElement(const T &x) {
-        return getElement(x, root);
-    }
-    void output(){
-        output(root);
-    }
-    int getSize(){ return size;}
-
-    // specific to this project
-    vector<T> allElements;
-    vector<T>& getSet(){return allElements;}
-    void clearElements(){ allElements.clear();}
-
-    void print(ostream& out){
-        print(out, root);
-    }
-    void emptyTree(){
-        emptyTree(root);
-        allElements.clear();
-        size = 0;
-        root = nullptr;
-    }
 };
 
-#endif //TREE_H
+#endif
