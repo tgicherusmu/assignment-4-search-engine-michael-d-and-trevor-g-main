@@ -67,7 +67,7 @@ public:
     }
 
     //int size;
-    int getSize(){ return int size;}
+    // int getSize(){ return int size;}
     /**
      * Returns true if x is found in the tree.
      */

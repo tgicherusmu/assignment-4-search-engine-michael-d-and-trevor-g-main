@@ -35,10 +35,10 @@ public:
     int size;
     int getSize(){ return size;}
     int getNumWords(){return numWords;}
-    int getTreeSize(){
-        treeSize = TreeIndex.getSize();
-        return treeSize;
-    }
+    // int getTreeSize(){
+    //     treeSize = TreeIndex.getSize();
+    //     return treeSize;
+    // }
     // int getUniquePersons(){
     //     return hashTablePersons.getUniqueSize();
     // }
