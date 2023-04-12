@@ -21,6 +21,8 @@ unordered_map<string,string> theHashedWords;
 //     for (auto it=persons.begin(); it != persons.end(); ++it)
 //         hashTableOrgs.insert(*it, nameOfDoc);
 // }
+
+
 void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){
     // put text of file in ss
     stringstream ss(docText);
@@ -29,18 +31,18 @@ void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){
     string word;
     while(ss>>word){
         // see if word is in stoplist
-        auto it= theStopWords.find(word);
-        if(it!=theStopWords.end()){
+        auto it= theStopWords.find(word); // check if word is in stoplist
+        if(it!=theStopWords.end()){ // if it is in the stoplist, continue
             continue;
         }
-        numWords++;
+        numWords++; // increment number of words
         // check if word has been hashed
-        auto it2 = theHashedWords.find(word);
-        if(it2!=theHashedWords.end()){
-            word = theHashedWords[word];
+        auto it2 = theHashedWords.find(word); // check if word is in theHashedWords
+        if(it2!=theHashedWords.end()){ // if it is in theHashedWords, continue
+            word = theHashedWords[word]; // set word to the hashed version of the word
 
         }
-        else {
+        else { //
             // get stemmed version of word
             string temp = word;
             Porter2Stemmer::trim(word);
@@ -55,88 +57,64 @@ void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){
             continue;
 
         // insert word to tree
+        //IndexEntry temp(word);
+        //IndexEntry& test = TreeIndex.insert(temp);
+
         IndexEntry temp(word);
-        IndexEntry& test = TreeIndex.insert(temp);
+        TreeIndex.insert(temp);
+        IndexEntry& test = TreeIndex.getEntry(word); 
 
         // add doc to entry
         test.addDocToIdxEntry(nameOfDoc);
 
     }
 }
-void IndexHandler::getTop50Words(){
-    TreeIndex.output();
-    vector<IndexEntry>& allWords = TreeIndex.getSet();
-    cout<<"    Word - # of Appearances"<<endl;
-    struct greaterThan
+
+void IndexHandler::getTop50Words(){  
+    TreeIndex.output(); // output tree
+    vector<IndexEntry>& allWords = TreeIndex.getSet(); // get vector of all words
+    cout<<"    Word - # of Appearances"<<endl; //seeing how mnay times each word appears
+    struct greaterThan // sort by how many times they appear
     {
-        inline bool operator() (const IndexEntry& struct1, const IndexEntry& struct2)
+        inline bool operator() (const IndexEntry& struct1, const IndexEntry& struct2) // sort by how many times they appear by comparing the number of docs they appear in
         {
-            return (struct1.getNumDocs() > struct2.getNumDocs());
+            return (struct1.getNumDocs() > struct2.getNumDocs()); // return true if struct1 appears more times than struct2
         }
     };
-    // sort vector
-    sort(allWords.begin(), allWords.end(), greaterThan());
-    int i=0;
-    for(IndexEntry& e: allWords){
-        if(i>49)
-            break;
-        cout<<"    "<<i+1<<".  "<<e.getWord()<<" - "<<e.getNumDocs()<<endl;
-        i++;
+    // sort vector by putting them in order on how many times they appear 
+    sort(allWords.begin(), allWords.end(), greaterThan()); // sort by how many times they appear
+    int i=0; // counter
+    for(IndexEntry& e: allWords){ // print out the top 50 words
+        if(i>49) // if we have printed out 50 words, break
+            break; // break out of loop
+        cout<<"    "<<i+1<<".  "<<e.getWord()<<" - "<<e.getNumDocs()<<endl; // print out the word and how many times it appears
+        i++; // increment counter
     }
-    TreeIndex.clearElements();
-}
+    TreeIndex.clearElements(); // clear the tree
+} 
 
-set<string>* IndexHandler::getDocsFromTree(const string&word){
-    IndexEntry* result= TreeIndex.getElement(IndexEntry(word));
-    if(result==NULL){
+set<string>* IndexHandler::getDocsFromTree(const string&word){ // returns a pointer to the set of docs
+    IndexEntry* result= TreeIndex.getElement(IndexEntry(word)); // get the index entry
+    if(result==NULL){  // if the word is not in the tree, return null
         //cout<<"No docs for that word found ("<<word<<") \n";
-        return NULL;
+        return NULL; // return null
     }
-    else{
+    else{ //if the word is in the treereturn the set of docs
+        //cout<<"Docs for that word found ("<<word<<") \n";
+        //cout<<*result<<endl;
+        return &result->getnameOfDocsSet();
        //cout<<*result<<endl;
         return &result->getnameOfDocsSet();
     }
-
-
 }
-// set<string>* IndexHandler::getDocsFromHashPerson(const string&word){
-//     //cout<<word<<" (PERSON)"<<endl;
 
-//     if(hashTablePersons.get(word)!=NULL){
-//         set<string>& a = *hashTablePersons.get(word);
-
-//         /*for(const auto& e: a){
-//             cout<<"     "<<e<<endl;
-//         }
-//         cout<<endl;*/
-//     }
-//     /*else{
-//         cout<<"     No docs for that person found\n\n";
-//     }*/
-//     return hashTablePersons.get(word);
-// }
-// set<string>* IndexHandler::getDocsFromHashOrgs(const string&word){
-//     //cout<<word<<" (ORG)"<<endl;
-//     if(hashTableOrgs.get(word)!=NULL){
-//         set<string>& a = *hashTableOrgs.get(word);
-
-//         /*for(const auto& e: a){
-//             cout<<"     "<<e<<endl;
-//         }
-//         cout<<endl;*/
-//     }
-//     /*else{
-//         cout<<"     No docs for that org found\n\n";
-//     }*/
-//     return hashTableOrgs.get(word);
-// }
-void IndexHandler::loadPersistenceFileIndexPersons(){
+void IndexHandler::loadPersistenceFileIndexPersons(){ 
     ifstream file("/home/pc/persistence_index/personsindex.txt");
-    if(file.is_open()){
+    if(file.is_open()){ // if the file is open
 
         string line;
-        while(getline(file,line)){
-            stringstream ss(line);
+        while(getline(file,line)){ // while there are lines in the file
+            stringstream ss(line); // put the line in a string stream
 
             // get the word
             string word;
@@ -149,11 +127,11 @@ void IndexHandler::loadPersistenceFileIndexPersons(){
         }
         file.close();
     }else{
-        cout<<"Persistence file (PERSONS) not found."<<endl<<endl;
+        cout<<"Persistence file (PERSONS) not found."<<endl<<endl; // if the file is not open, print out that the file is not open
     }
 }
-void IndexHandler::loadPersistenceFileIndexOrgs(){
-    ifstream file("/home/pc/persistence_index/orgsindex.txt");
+void IndexHandler::loadPersistenceFileIndexOrgs(){ // load the orgs file
+    ifstream file("/home/pc/persistence_index/orgsindex.txt"); // open the file
     if(file.is_open()){
 
         string line;
@@ -174,7 +152,9 @@ void IndexHandler::loadPersistenceFileIndexOrgs(){
         cout<<"Persistence file (ORGS) not found."<<endl<<endl;
     }
 }
-void IndexHandler::loadPersistenceFileIndexWords() {
+
+//loading files from
+void IndexHandler::loadPersistenceFileIndexWords() { 
     ifstream file("/home/pc/persistence_index/wordindex.txt");
     if(file.is_open()){
 
@@ -200,8 +180,8 @@ void IndexHandler::loadPersistenceFileIndexWords() {
                 getline(ss,freqStr,',');
                 freq=stoi(freqStr);
 
-                idx.nameOfDocSetInsert(fileName);
-                idx.nameOfDocsMapInsert(fileName, freq);
+                idx.nameOfDocSetInsert(fileName); // insert the file name into the set
+                idx.nameOfDocsMapInsert(fileName, freq); // insert the file name and the frequency into the map
             }
             TreeIndex.insert(idx);
         }
@@ -210,6 +190,8 @@ void IndexHandler::loadPersistenceFileIndexWords() {
         cout<<"Persistence file (WORDS) not found."<<endl<<endl;
     }
 }
+
+//saving info that can be used for late retrieval
 void IndexHandler::savePersistenceFileIndexPersons(){
     ofstream open("/home/pc/persistence_index/personsindex.txt");
     // hashTablePersons.output(open);
@@ -226,6 +208,7 @@ void IndexHandler::savePersistenceFileIndexWords(){
     open.close();
 }
 
+//resetting tree
 void IndexHandler::clear() {
     TreeIndex.emptyTree();
     numWords = 0;
