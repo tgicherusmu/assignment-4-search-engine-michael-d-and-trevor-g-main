@@ -3,21 +3,18 @@
 #include <iostream>
 
 using namespace std;
-
-void changeFile(string fileName);
-
-void parseDoc();
-
-string getText();
-
-string getTextBlurb();
-
-string getTitle();
-
-string getPublishDate();
-
-string getURL();
-
-string getPerson();
-
-string getOrgs();
+class Document{
+    public:
+        Document(string);
+        void changeFile(string);
+        void parseDoc();
+        string getText();
+        string getTextBlurb();
+        string getTitle();
+        string getPublishDate();
+        string getSite();
+        string getURL();
+        string getPerson();
+        string getOrgs();
+        
+};

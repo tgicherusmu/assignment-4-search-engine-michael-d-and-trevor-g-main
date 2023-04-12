@@ -1,40 +1,33 @@
-//changeFile need to take in a string as an argument and set FileName variable to that string
-//parseDoc needs to read in a file using ifsreamm and wraps it using StreamWrapper
-//getText returns the text from the JSON file
-//getText need to return text from JSON file
-//getTextBlurb needs to return a string that contains the first 32 words of text from the JSON file
-//getTitle needs to return the title of teh file
-//getPublishDate needs to return the published date of JSON
-//getSite needs to return the URL of the file
-//getPerson needs to return a list of people mentioned in the file
-//getOrgs needs to return a list of organizations mentioned in the file
-
 #include <fstream>
-#include<iostream>
+#include <iostream>
 #include "Document.h"
 #include <sstream>
 #include <algorithm>
+
 using namespace std;
 
-void Document::changeFile(string c){
+//changeFile need to take in a string as an argument and set FileName variable to that string
+void Document::changeFile(string c){ 
     FileName = c;
     parseDoc();
 }
+//parseDoc needs to read in a file using ifsreamm and wraps it using StreamWrapper
 void Document::parseDoc(){
     // read in file
     ifstream f(FileName);
 
     // wrap istream
     rapidjson::IStreamWrapper wrap(f);
-
+ 
     // get all the text from file
     char text[1000000];
     d.ParseStream(wrap);
 
 }
-string Document::getText(){
+string Document::getText(){ //getText returns the text from the JSON file //getText returns the text from the JSON file
     return d["text"].GetString();
 }
+//getTextBlurb needs to return a string that contains the first 32 words of text from the JSON file
 string Document::getTextBlurb(){
     string temp = d["text"].GetString();
     string temp2, blurb;
@@ -57,19 +50,24 @@ string Document::getTextBlurb(){
 
         }
         blurb+=" "+temp2;
-        i++;
+        ++i;
     }
     return blurb+"...";
 }
-string Document::getTitle(){
+
+//getTitle needs to return the title of teh file
+string Document::getTitle(){ 
     return d["title"].GetString();
 }
+//getPublishDate needs to return the published date of JSON
 string Document::getPublishDate(){
     return d["published"].GetString();
 }
+//getSite needs to return the URL of the file
 string Document::getSite(){
     return d["url"].GetString();
 }
+//getPerson needs to return a list of people mentioned in the file
 list<string> Document::getPersons(){
     list<string> persons;
     for (rapidjson::Value::ConstValueIterator itr = d["entities"].GetObject()["persons"].Begin(); itr != d["entities"].GetObject()["persons"].End(); ++itr){
@@ -78,6 +76,7 @@ list<string> Document::getPersons(){
 
    return persons;
 }
+//getOrgs needs to return a list of organizations mentioned in the file
 list<string> Document::getOrgs(){
     list<string> orgs;
     for (rapidjson::Value::ConstValueIterator itr = d["entities"].GetObject()["organizations"].Begin(); itr != d["entities"].GetObject()["organizations"].End(); ++itr){
