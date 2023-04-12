@@ -35,10 +35,12 @@ public:
     int size;
     int getSize(){ return size;}
     int getNumWords(){return numWords;}
-    // int getTreeSize(){
-    //     treeSize = TreeIndex.getSize();
-    //     return treeSize;
-    // }
+    int getSet(const string&word, set<string>&set);
+    int getEntry(const string&word, IndexEntry&entry);
+    int getTreeSize(){
+        treeSize = TreeIndex.getSize();
+        return treeSize;
+    }
     // int getUniquePersons(){
     //     return hashTablePersons.getUniqueSize();
     // }
@@ -46,6 +48,13 @@ public:
     //     return hashTableOrgs.getUniqueSize();
     // }
     void getTop50Words();
+
+    void clearElements();
+    void clear();
+    void emptyTree();
+
+//   void nameOfDocSetInsert(fileName); 
+  // void nameOfDocsMapInsert(fileName, freq); 
 
     // load persistence files in
     void loadPersistenceFileIndexOrgs();
@@ -56,7 +65,7 @@ public:
     void savePersistenceFileIndexOrgs();
     void savePersistenceFileIndexWords();
 
-    void clear();
+
 };
 
 #endif
