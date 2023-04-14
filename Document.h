@@ -4,6 +4,16 @@
 
 using namespace std;
 class Document{
+    private:
+        string FileName;
+        string text;
+        string textBlurb;
+        string title;
+        string publishDate;
+        string site;
+        string url;
+        string person;
+        string orgs;
     public:
         Document(string);
         void changeFile(string);

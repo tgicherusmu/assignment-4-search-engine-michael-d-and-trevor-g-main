@@ -37,10 +37,10 @@ public:
     int getNumWords(){return numWords;}
     int getSet(const string&word, set<string>&set);
     int getEntry(const string&word, IndexEntry&entry);
-    int getTreeSize(){
-        treeSize = TreeIndex.getSize();
-        return treeSize;
-    }
+    // int getTreeSize(){
+    //     treeSize = TreeIndex.getSize();
+    //     return treeSize;
+    // }
     // int getUniquePersons(){
     //     return hashTablePersons.getUniqueSize();
     // }

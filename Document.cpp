@@ -45,7 +45,7 @@ string Document::getTextBlurb(){
             break;
         if(i==16){
             blurb+="\n"+temp2;
-            i++;
+            ++i;
             continue;
 
         }
@@ -68,7 +68,7 @@ string Document::getSite(){
     return d["url"].GetString();
 }
 //getPerson needs to return a list of people mentioned in the file
-list<string> Document::getPersons(){
+list<string> Document::getPerson(){
     list<string> persons;
     for (rapidjson::Value::ConstValueIterator itr = d["entities"].GetObject()["persons"].Begin(); itr != d["entities"].GetObject()["persons"].End(); ++itr){
         persons.emplace_back(itr->GetObject()["name"].GetString());
