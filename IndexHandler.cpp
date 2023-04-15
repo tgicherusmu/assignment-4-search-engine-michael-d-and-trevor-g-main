@@ -103,9 +103,9 @@ set<string>* IndexHandler::getDocsFromTree(const string&word){ // returns a poin
     else{ //if the word is in the treereturn the set of docs
         //cout<<"Docs for that word found ("<<word<<") \n";
         //cout<<*result<<endl;
-        return &result->getnameOfDocsSet();
+        return &result->getDocNamesSet();
        //cout<<*result<<endl;
-        return &result->getnameOfDocsSet();
+        return &result->getDocNamesSet();
     }
 }
 
@@ -181,8 +181,8 @@ void IndexHandler::loadPersistenceFileIndexWords() {
                 getline(ss,freqStr,',');
                 freq=stoi(freqStr);
 
-                idx.nameOfDocSetInsert(fileName); // insert the file name into the set
-                idx.nameOfDocsMapInsert(fileName, freq); // insert the file name and the frequency into the map
+                idx.docNameSetInsert(fileName); // insert the file name into the set
+                idx.docNamesMapInsert(fileName, freq); // insert the file name and the frequency into the map
             }
             TreeIndex.insert(idx);
         }
