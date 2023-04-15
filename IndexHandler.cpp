@@ -62,7 +62,8 @@ void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){
 
         IndexEntry temp(word);
         TreeIndex.insert(temp);
-        IndexEntry& test = TreeIndex.getEntry(word); 
+        const IndexEntry& test = TreeIndex.getEntry(word);
+
 
         // add doc to entry
         test.addDocToIdxEntry(nameOfDoc);
@@ -208,9 +209,11 @@ void IndexHandler::savePersistenceFileIndexWords(){
     open.close();
 }
 
+
+
 //resetting tree
 void IndexHandler::clear() {
-    TreeIndex.emptyTree();
+    TreeIndex.clearElements();
     numWords = 0;
     treeSize = 0;
 
