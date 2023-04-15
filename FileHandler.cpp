@@ -17,7 +17,7 @@ void FileHandler::updateIndex(const string&file){
     i.addDoc(file,doc.getText());
 
     // add persons
-    i.addPersons(file,doc.getPersons());
+    i.addPersons(file,doc.getPerson());
     // add orgs
     i.addOrgs(file,doc.getOrgs());
 
@@ -26,7 +26,7 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
 
     // update word
     q.changeWord(word);
-    string query = q.getWord();
+    string query = q.getStemmedWord();
 
     // get docs for word
     set<string>* temp = i.getDocsFromTree(query);
@@ -74,7 +74,7 @@ void FileHandler::queryTreeNotWords(const string& word) {
 
     // update word
     q.changeWord(word);
-    string query = q.getWord();
+    string query = q.getStemmedWord();
 
     // get docs
     set<string> *temp = i.getDocsFromTree(query);
@@ -110,22 +110,22 @@ void FileHandler::queryTreeNotWords(const string& word) {
 //                          temp2.end(),inserter(intersect,intersect.begin()));
 //     }
 // }
-// void FileHandler::queryHashOrgs(const string&person){
-    // get set
-    set<string>* temp = i.getDocsFromHashOrgs(person);
+//  void FileHandler::queryHashOrgs(const string&person){
+//     // get set
+//     set<string>* temp = i.getDocsFromHashOrgs(person);
 
-    // check if set is empty
-    if(temp==NULL){
-        intersect.clear();
-    }else{
-        // copy intersect set and clear old
-        set<string> temp2 = intersect;
-        intersect.clear();
-        // intersect
-        set_intersection(temp->begin(),temp->end(),temp2.begin(),
-                         temp2.end(),inserter(intersect,intersect.begin()));
-    }
-}
+//     // check if set is empty
+//     if(temp==NULL){
+//         intersect.clear();
+//     }else{
+//         // copy intersect set and clear old
+//         set<string> temp2 = intersect;
+//         intersect.clear();
+//         // intersect
+//         set_intersection(temp->begin(),temp->end(),temp2.begin(),
+//                          temp2.end(),inserter(intersect,intersect.begin()));
+//     }
+// }
 
 void FileHandler::outputResults(){
     top15Sets();
