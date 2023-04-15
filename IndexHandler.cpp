@@ -63,6 +63,7 @@ void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){
         //TreeIndex.insert(temp);
         IndexEntry temp(word);
         TreeIndex.insert(temp);
+        IndexEntry& test = TreeIndex.getEntry(word);
 
 
 
