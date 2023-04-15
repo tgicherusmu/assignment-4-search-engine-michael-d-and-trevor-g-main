@@ -1,5 +1,5 @@
-#ifndef TREE_H
-#define TREE_H
+#ifndef AVL_TREE_H
+#define AVL_TREE_H
 
 #define DEBUG
 
@@ -30,11 +30,20 @@ private:
 
     AvlNode *root;
 
+     void print(ostream& out, AvlNode* n)const{
+        if(n!=nullptr){
+            out<<n->element;
+            print(out,n->left);
+            print(out,n->right);
+        }
+    }
+
+
 public:
     /**
      * @brief Default constructor
      */
-    AvlTree() : root{NULL}
+    AvlTree() : root{nullptr}
     {
     }
 
@@ -42,7 +51,7 @@ public:
      * @brief Rule-of-3 Part 1: Copy constructor uses internal function clone().
      *
      */
-    AvlTree(const AvlTree &rhs) : root{NULL}
+    AvlTree(const AvlTree &rhs) : root{nullptr}
     {
         root = clone(rhs.root);
     }
@@ -66,8 +75,6 @@ public:
         return *this;
     }
 
-    //int size;
-    // int getSize(){ return int size;}
     /**
      * Returns true if x is found in the tree.
      */
@@ -82,7 +89,7 @@ public:
      */
     bool isEmpty() const
     {
-        return root == NULL;
+        return root == nullptr;
     }
 
 
@@ -118,6 +125,86 @@ public:
         remove(x, root);
     }
 
+    std::vector<std::string> getSet() const {
+        std::vector<std::string> words;
+
+        // traverse the tree and add each word to the vector
+        traverse(root, words);
+
+        return words;
+    }
+
+    inline void clearElements() {
+        clear(root);
+        root = nullptr;
+    }
+
+    IndexEntry* getEntry(const std::string& word) const {
+        Node* node = find(root, word);
+
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        return &(node->entry);
+    }
+
+    void makeEmpty(AvlNode *&t)
+    {
+        if (t == nullptr)
+            return;
+
+        makeEmpty(t->left);
+        makeEmpty(t->right);
+        delete t;
+        t = nullptr;
+    }
+
+    void emptyTree(AvlNode* n){
+        if(n!=nullptr){
+            emptyTree(n->left);
+            emptyTree(n->right);
+            delete n;
+        }
+    }
+
+    vector<T>& getSet(){return allElements;}
+
+    //void clearElements(){ allElements.clear();}
+
+    T* getElement(const T& x, AvlNode*& curr){
+        if(curr==nullptr)
+            return nullptr; // doesn't exist
+        if(x < curr->element)
+            return getElement(x, curr->left); // descend left child
+        else if(curr->element < x)
+            return getElement(x, curr->right); // descend right child
+        else if(curr->element == x)
+            return &curr->element; // exists
+        else    return nullptr;
+    }
+
+/*
+     void output(AvlNode* n){
+        if(n!=nullptr){
+            output(n->left);
+            allElements.push_back(n->element);
+            output(n->right);
+        }
+    }
+    */
+
+     void output(AvlNode* n) {
+        if (n == nullptr) {
+            return;
+        }
+
+        output(n->left);
+        std::cout << n->key << std::endl;
+        output(n->right);
+    }
+
+
 private:
     /**
      * Internal method to insert into a subtree.
@@ -127,9 +214,9 @@ private:
      */
     void insert(const Comparable &x, AvlNode *&t)
     {
-        if (t == NULL)
+        if (t == nullptr)
         {
-            t = new AvlNode{x, NULL, NULL, 0};
+            t = new AvlNode{x, nullptr, nullptr, 0};
             return; // a single node is always balanced
         }
 
@@ -165,24 +252,16 @@ private:
     /**
      * Internal method to make subtree empty.
      */
-    void makeEmpty(AvlNode *&t)
-    {
-        if (t == NULL)
-            return;
+    
 
-        makeEmpty(t->left);
-        makeEmpty(t->right);
-        delete t;
-        t = NULL;
-    }
 
     /**
      * Internal method to clone subtree.
      */
     AvlNode *clone(AvlNode *t) const
     {
-        if (t == NULL)
-            return NULL;
+        if (t == nullptr)
+            return nullptr;
 
         return new AvlNode{t->key, clone(t->left), clone(t->right), t->height};
     }
@@ -196,7 +275,7 @@ private:
      */
     void prettyPrintTree(const std::string &prefix, const AvlNode *node, bool isRight) const
     {
-        if (node == NULL)
+        if (node == nullptr)
             return;
 
         std::cout << prefix;
@@ -214,11 +293,11 @@ private:
     // Balancing: AVL Rotations
 
     /**
-     * Return the height of node t or -1 if NULL.
+     * Return the height of node t or -1 if nullptr.
      */
     int height(AvlNode *t) const
     {
-        return t == NULL ? -1 : t->height;
+        return t == nullptr ? -1 : t->height;
     }
 
     static const int ALLOWED_IMBALANCE = 1; // 1 is the default; more will make balancing cheaper
@@ -228,7 +307,7 @@ private:
     // t represents alpha in the textbook
     void balance(AvlNode *&t)
     {
-        if (t == NULL)
+        if (t == nullptr)
             return;
 
         if (height(t->left) - height(t->right) > ALLOWED_IMBALANCE) // unbalancing insertion was left
@@ -253,6 +332,20 @@ private:
     int max(int lhs, int rhs) const
     {
         return lhs > rhs ? lhs : rhs;
+    }
+
+     AvlNode* find(AvlNode* node, const std::string& word) const {
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        if (word < node->entry.word) {
+            return find(node->left, word);
+        } else if (word > node->entry.word) {
+            return find(node->right, word);
+        } else {
+            return node;
+        }
     }
 
     /**
