@@ -23,7 +23,7 @@ unordered_map<string,string> theHashedWords;
 // }
 
 
-void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){
+void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){ 
     // put text of file in ss
     stringstream ss(docText);
 
@@ -57,12 +57,19 @@ void IndexHandler::addDoc(const string&nameOfDoc, const string&docText){
             continue;
 
         // insert word to tree
+        //std::vector<IndexEntry> temp;
+        //temp.push_back(IndexEntry(word));
         //IndexEntry temp(word);
-        //IndexEntry& test = TreeIndex.insert(temp);
-
+        //TreeIndex.insert(temp);
         IndexEntry temp(word);
         TreeIndex.insert(temp);
-        const IndexEntry& test = TreeIndex.getEntry(word);
+
+
+
+
+        //IndexEntry temp(word);
+        //TreeIndex.insert(temp);
+        //const IndexEntry& test = TreeIndex.getEntry(word);
 
 
         // add doc to entry
@@ -212,7 +219,7 @@ void IndexHandler::savePersistenceFileIndexWords(){
 
 
 //resetting tree
-void IndexHandler::clear() {
+    void IndexHandler::clear() {
     TreeIndex.clearElements();
     numWords = 0;
     treeSize = 0;
