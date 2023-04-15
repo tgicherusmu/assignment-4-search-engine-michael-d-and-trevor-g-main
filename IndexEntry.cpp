@@ -13,7 +13,7 @@ void IndexEntry::addDocToIdxEntry(const string& docName){
     auto it= DocNames.find(docName);
     if(it!=DocNames.end()){
         it->second++;
-        //return;
+        return;
     }
     // or add doc
     else{
