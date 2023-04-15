@@ -201,6 +201,8 @@ public:
         print(out, root);
     }
 
+    int getSize(){ return size;}
+
      
 
 
