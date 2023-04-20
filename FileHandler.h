@@ -50,9 +50,9 @@ public:
     void getTop50Words();
 
      int getNumWords(){ return i.getNumWords();};
-    int getTreeSize(){return i.getTreeSize();};
-    int getNumUniquePersons(){return i.getUniquePersons();};
-    int getNumUniqueOrgs(){return i.getUniqueOrgs();};
+    // int getTreeSize(){return i.getTreeSize();};
+    // int getNumUniquePersons(){return i.getUniquePersons();};
+    // int getNumUniqueOrgs(){return i.getUniqueOrgs();};
 
     void loadPersonIndex(){ i.loadPersistenceFileIndexPersons();};
     void loadOrgsIndex(){ i.loadPersistenceFileIndexOrgs();};
