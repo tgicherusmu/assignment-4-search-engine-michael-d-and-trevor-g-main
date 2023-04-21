@@ -1,3 +1,5 @@
+#ifndef QUERYENGINE_H
+#define QUERYENGINE_H
 #include <iostream>
 using namespace std;
 class QueryEngine
@@ -8,3 +10,4 @@ class QueryEngine
         void changeWord(const string&);
         void getStemmedWord();
 };
+#endif
