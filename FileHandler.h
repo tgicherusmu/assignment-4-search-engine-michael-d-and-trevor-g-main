@@ -5,8 +5,8 @@
 #include "Document.h"
 #include "Tree.h"
 #include "QueryEngine.h"
-//#include "../rapidjson/document.h"
-//#include "../rapidjson/istreamwrapper.h"
+#include "rapidjson/istreamwrapper.h"
+#include "rapidjson/document.h"
 #include<sstream>
 using namespace std;
 
