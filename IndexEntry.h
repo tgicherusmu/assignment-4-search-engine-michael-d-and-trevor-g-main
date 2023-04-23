@@ -42,7 +42,8 @@ public:
         return os;
     }
     set<string>& getDocNamesSet(){ return DocNamesSet;}
-    const int getNumDocs()const {return numDocs;}
+    int getNumDocs() const { return numDocs; }
+    //int getCount() const { return count; }
     string getWord(){ return Word;}
 
     void docNameSetInsert(const string&);
