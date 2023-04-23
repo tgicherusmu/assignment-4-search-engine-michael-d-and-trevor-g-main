@@ -8,6 +8,6 @@ class QueryEngine
         string Word;
     public:
         void changeWord(const string&);
-        void getStemmedWord();
+        string getStemmedWord();
 };
 #endif
