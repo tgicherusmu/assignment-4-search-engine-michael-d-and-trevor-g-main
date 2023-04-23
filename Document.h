@@ -37,6 +37,7 @@ class Document {
     string getURL();
     list<string> getPerson();
     list<string> getOrgs();
+    int maxChars = 1000000;
 };
 
 #endif
