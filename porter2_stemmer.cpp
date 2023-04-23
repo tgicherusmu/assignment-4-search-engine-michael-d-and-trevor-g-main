@@ -1,5 +1,6 @@
-//this class will the get root of each word
-/* * @author Sean Massung
+/**
+ * @file porter2_stemmer.cpp
+ * @author Sean Massung
  * @date September 2012
  *
  * Implementation of
@@ -150,13 +151,17 @@ void Porter2Stemmer::internal::step0(std::string& word)
 
 /*
   Step 1a:
+
   sses
     replace by ss
+
   ied   ies
     replace by i if preceded by more than one letter, otherwise by ie
     (so ties -> tie, cries -> cri)
+
   us   ss
     do nothing
+
   s
     delete if the preceding word part contains a vowel not immediately before
   the
@@ -194,8 +199,10 @@ bool Porter2Stemmer::internal::step1A(std::string& word)
 
 /*
   Step 1b:
+
   eed   eedly
       replace by ee if in R1
+
   ed   edly   ing   ingly
       delete if the preceding word part contains a vowel, and after the
   deletion:
@@ -234,6 +241,7 @@ void Porter2Stemmer::internal::step1B(std::string& word, size_t startR1)
 
 /*
   Step 1c:
+
   Replace suffix y or Y by i if preceded by a non-vowel which is not the first
   letter of the word (so cry -> cri, by -> by, say -> say)
 */
@@ -247,7 +255,9 @@ void Porter2Stemmer::internal::step1C(std::string& word)
 
 /*
   Step 2:
+
   If found and in R1, perform the action indicated.
+
   tional:               replace by tion
   enci:                 replace by ence
   anci:                 replace by ance
@@ -314,7 +324,9 @@ void Porter2Stemmer::internal::step2(std::string& word, size_t startR1)
 
 /*
   Step 3:
+
   If found and in R1, perform the action indicated.
+
   ational:            replace by ate
   tional:             replace by tion
   alize:              replace by al
@@ -344,7 +356,9 @@ void Porter2Stemmer::internal::step3(std::string& word, size_t startR1,
 
 /*
   Step 4:
+
   If found and in R2, perform the action indicated.
+
   al ance ence er ic able ible ant ement ment ent ism ate
     iti ous ive ize
                               delete
@@ -387,6 +401,7 @@ void Porter2Stemmer::internal::step4(std::string& word, size_t startR2)
 
 /*
   Step 5:
+
   e     delete if in R2, or in R1 and not preceded by a short syllable
   l     delete if in R2 and preceded by l
 */
@@ -411,6 +426,7 @@ void Porter2Stemmer::internal::step5(std::string& word, size_t startR1,
 /*
   Determines whether a word ends in a short syllable.
   Define a short syllable in a word as either
+
   (a) a vowel followed by a non-vowel other than w, x or Y and preceded by a
       non-vowel
   (b) a vowel at the beginning of the word followed by a non-vowel.
