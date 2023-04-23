@@ -141,7 +141,7 @@ private:
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
      */
-    void remove(const Comparable &x, AvlNode *&t)
+    void remove(const Comparable& item)
     {
         throw std::runtime_error("Not implemented yet!");
         // same as in a binary search tree
@@ -160,6 +160,26 @@ private:
         delete t;
         t = nullptr;
     }
+
+    vector<Comparable> getEntries() const
+    {
+        vector<Comparable> entries;
+        if (isEmpty())
+        {
+            return entries;
+        }
+        else
+        {
+            getEntriesHelper(entries, root);
+            return entries;
+        }
+    }
+
+    void clearElements()
+    {
+        makeEmpty(root);
+    }
+
     /**
      * Internal method to clone subtree.
      */
