@@ -154,5 +154,5 @@ if(LIBCXX_LIBRARY)
     target_link_libraries(porter2-stemmer PUBLIC -L${LIBCXX_LIB_PATH})
 endif()
 
-add_executable(stem main.cpp)
-target_link_libraries(stem porter2-stemmer)
+add_executable(superSearch main.cpp Document.cpp FileHandler.cpp IndexEntry.cpp IndexHandler.cpp porter2_stemmer.cpp QueryEngine.cpp Tree.h)
+target_link_libraries(superSearch porter2-stemmer)
