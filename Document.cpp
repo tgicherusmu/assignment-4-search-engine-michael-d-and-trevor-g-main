@@ -19,8 +19,8 @@ void Document::parseDoc() {
     rapidjson::IStreamWrapper wrap(f);
 
     // get all the text from file
-    char text[1000000];
-    //char* text = new char[maxChars];
+    //char text[1000000];
+    char* text = new char[maxChars];
     d.ParseStream(wrap);
 }
 string Document::getText() {  // getText returns the text from the JSON file //getText returns the text from the JSON file
