@@ -76,6 +76,12 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
 
     // extract the words
     string word;
+
+    const Comparable& getEntry(const Comparable& item) const
+    {
+        return getEntry(item, root)->element;
+    }
+
     while (ss >> word) {
         // see if word is in stoplist
         auto it = theStopWords.find(word);  // check if word is in stoplist
