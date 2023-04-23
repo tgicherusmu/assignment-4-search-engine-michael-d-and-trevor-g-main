@@ -64,7 +64,10 @@ public:
     void savePersistenceFileIndexPersons();
     void savePersistenceFileIndexOrgs();
     void savePersistenceFileIndexWords();
-
+    class Comparable {
+    public:
+        int value;
+    };
 
 };
 
