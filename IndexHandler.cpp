@@ -86,7 +86,7 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
             continue;
         }
 
-        // TA Adam E: wouldnt you only want to increment the number of words every time you find a new word? right now, you incremenet for every word you have
+        // TA Adam E:  you only want to increment the number of words every time you find a new word? right now, you incremenet for every word you have
         numWords++;  // increment number of words
         // check if word has been hashed
         auto it2 = theHashedWords.find(word);  // check if word is in theHashedWords
@@ -114,7 +114,8 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
         // TreeIndex.insert(temp);
         IndexEntry temp(word);
         TreeIndex.insert(temp);
-        IndexEntry& test = TreeIndex.getEntry(word);
+        IndexEntry test = TreeIndex.getEntry(word);
+        //
 
         // IndexEntry temp(word);
         // TreeIndex.insert(temp);
@@ -143,7 +144,7 @@ void IndexHandler::getTop50Words() {
 }
 
 set<string> IndexHandler::getDocsFromTree(const string& word) {
-    IndexEntry result = TreeIndex.getElement(IndexEntry(word));  // get the index entry
+    IndexEntry result = TreeIndex.getEntry(word);  // get the index entry
     if (result.getDocNamesSet().empty()) {                       // if the word is not in the tree, return an empty set
         // cout<<"No docs for that word found ("<<word<<") \n";
         return set<string>();
@@ -176,10 +177,7 @@ void IndexHandler::loadPersistenceFileIndexPersons() {
     file.close();
 }
 
-const IndexHandler::Comparable& getEntry(const Comparable& item) const
-{
-    return getEntry(item, root)->element;
-}
+
 
 void IndexHandler::loadPersistenceFileIndexOrgs() {             // load the orgs file
     ifstream file("/home/pc/persistence_index/orgsindex.txt");  // open the file
