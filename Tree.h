@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -141,12 +142,12 @@ private:
      * t is the node that roots the subtree.
      * Set the new root of the subtree.
      */
-    void remove(const Comparable& item)
-    {
-        throw std::runtime_error("Not implemented yet!");
-        // same as in a binary search tree
-        // don't forget to balance the AVL tree after the deletion!
-    }
+    // void remove(const Comparable& item)
+    // {
+    //     throw std::runtime_error("Not implemented yet!");
+    //     // same as in a binary search tree
+    //     // don't forget to balance the AVL tree after the deletion!
+    // }
     /**
      * Internal method to make subtree empty.
      */
@@ -161,24 +162,24 @@ private:
         t = nullptr;
     }
 
-    vector<Comparable> getEntries() const
-    {
-        vector<Comparable> entries;
-        if (isEmpty())
-        {
-            return entries;
-        }
-        else
-        {
-            getEntriesHelper(entries, root);
-            return entries;
-        }
-    }
+    // vector<Comparable> getEntries() const
+    // {
+    //     vector<Comparable> entries;
+    //     if (isEmpty())
+    //     {
+    //         return entries;
+    //     }
+    //     else
+    //     {
+    //         getEntriesHelper(entries, root);
+    //         return entries;
+    //     }
+    // }
 
-    void clearElements()
-    {
-        makeEmpty(root);
-    }
+    // void clearElements()
+    // {
+    //     makeEmpty(root);
+    // }
 
     /**
      * Internal method to clone subtree.
