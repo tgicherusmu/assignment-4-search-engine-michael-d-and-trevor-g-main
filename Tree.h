@@ -109,6 +109,10 @@ public:
     {
         remove(x, root);
     }
+    void clearElements()
+    {
+        makeEmpty(root);
+    }
 private:
     /**
      * Internal method to insert into a subtree.
@@ -162,24 +166,38 @@ private:
         t = nullptr;
     }
 
-    // vector<Comparable> getEntries() const
-    // {
-    //     vector<Comparable> entries;
-    //     if (isEmpty())
-    //     {
-    //         return entries;
-    //     }
-    //     else
-    //     {
-    //         getEntriesHelper(entries, root);
-    //         return entries;
-    //     }
-    // }
+ //make it comparable because its empty and we cannot return NULL
+     Comparable getEntry(string word) const
+     {
+            Comparable C;
+            if (isEmpty())
+            {
+                return C;
+            }
+            else
+            {
+                getEntriesHelper(entries, root);
+                //have one that puts together a vector
+                //have one that returns a single comparable
+                return entries;
+            }
+    };
 
-    // void clearElements()
-    // {
-    //     makeEmpty(root);
-    // }
+     vector<Comparable> getEntries() const
+     {
+         vector<Comparable> entries;
+         if (isEmpty()) {
+             return entries;
+         }
+         else
+         {
+             getEntriesHelper(entries, root);
+             return entries;
+         }
+     };
+    //look at print for inspiration
+
+
 
     /**
      * Internal method to clone subtree.
