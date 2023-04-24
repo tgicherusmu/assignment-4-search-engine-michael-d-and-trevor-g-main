@@ -113,6 +113,38 @@ public:
     {
         makeEmpty(root);
     }
+
+    Comparable getEntryHelper(Comparable entry, AvlNode* node) {
+        if (entry == node->key) {
+            return node->key;
+        }
+        
+    }
+
+ //put comparable in indexEntry
+ //if value that you are looking thenn go left, if higher then go right
+ //try catch block
+ //boolean if its there or not
+
+    Comparable getEntry(string word) const
+    {
+        Comparable C;
+        if (isEmpty())
+        {
+            return C;
+        }
+        else
+        {
+            getEntryHelper(entries, root);
+            //have one that puts together a vector
+            //have one that returns a single comparable
+            return entries;
+        }
+    };
+
+
+
+
 private:
     /**
      * Internal method to insert into a subtree.
@@ -167,21 +199,12 @@ private:
     }
 
  //make it comparable because its empty and we cannot return NULL
-     Comparable getEntry(string word) const
-     {
-            Comparable C;
-            if (isEmpty())
-            {
-                return C;
-            }
-            else
-            {
-                getEntriesHelper(entries, root);
-                //have one that puts together a vector
-                //have one that returns a single comparable
-                return entries;
-            }
-    };
+
+
+    //const IndexHandler::Comparable& getEntry(const Comparable& item) const
+    //{
+      //  return getEntry(item, root)->element;
+    //}
 
      vector<Comparable> getEntries() const
      {
