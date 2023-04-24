@@ -15,12 +15,14 @@ private:
     unordered_map<string,int> DocNames;
     set<string>DocNamesSet;
     int numDocs;
+
 public:
     // constructors
-    IndexEntry(string word, const string& docName): Word(std::move(word)){
+    // IndexEntry(string word, const string& docName): Word(std::move(word)){
+    IndexEntry(string word, const string& docName){
         DocNames[docName]=1;
-
     }
+    IndexEntry();
     // constructor ONLY for operator==
     explicit IndexEntry(string word): Word(std::move(word)){}
     IndexEntry(string word, const int num): Word(std::move(word)),numDocs(num) {}
@@ -28,10 +30,17 @@ public:
     // add doc to DocNames if word exists
     void addDocToIdxEntry(const string&);
 
-    // operators to be able to add to tree
-    bool operator< (const IndexEntry& s) const;
-    bool operator> (const IndexEntry& s) const;
-    bool operator== (const IndexEntry& s) const;
+
+
+    bool operator< (const IndexEntry& s) const{
+        return this->Word < s.Word;
+    }
+    bool operator> (const IndexEntry& s) const {
+        return this->Word > s.Word;
+    }
+    bool operator== (const IndexEntry& s) const {
+        return this->Word == s.Word;
+    }
 
     friend std::ostream& operator<< (std::ostream&os, const IndexEntry&s){
         os << s.Word<<","<<s.numDocs;
