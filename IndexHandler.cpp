@@ -141,6 +141,7 @@ void IndexHandler::getTop50Words() {
         i++; // increment counter
     }
     TreeIndex.clearElements();
+    //
 }
 
 set<string> IndexHandler::getDocsFromTree(const string& word) {
