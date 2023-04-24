@@ -127,7 +127,7 @@ public:
  //try catch block
  //boolean if its there or not
 
-    Comparable getEntryHelper(Comparable entry, AvlNode* node) {
+    Comparable getEntryHelper(Comparable entry, AvlNode* node) const{
         try {
             if (entry == node->key) {
                 return node->key;
