@@ -2,6 +2,7 @@
 #ifndef TREE_H
 #define TREE_H
 #define DEBUG
+#include "IndexEntry.h"
 
 
 #include <stdexcept>
@@ -114,17 +115,50 @@ public:
         makeEmpty(root);
     }
 
-    Comparable getEntryHelper(Comparable entry, AvlNode* node) {
-        if (entry == node->key) {
-            return node->key;
-        }
-        
-    }
+    //Comparable getEntryHelper(Comparable entry, AvlNode* node) {
+      //  if (entry == node->key) {
+        //    return node->key;
+        //}
+
+    //}
 
  //put comparable in indexEntry
  //if value that you are looking thenn go left, if higher then go right
  //try catch block
  //boolean if its there or not
+
+    Comparable getEntryHelper(Comparable entry, AvlNode* node) {
+        try {
+            if (entry == node->key) {
+                return node->key;
+            }
+            if (entry > node->key){
+                if (node->right == nullptr) {
+                    throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
+                }
+                else{
+                    return getEntryHelper(entry, node->right);
+                }
+        }
+            if (entry < node->key){
+                if (node->left == nullptr) {
+                    throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
+                }
+                else{
+                    return getEntryHelper(entry, node->left);
+                }
+            }
+           // else if (entry < node->key) {
+             //   return getEntryHelper(entry, node->left);
+            //}
+            //else {
+              //  return getEntryHelper(entry, node->right);
+            //}
+        }
+        catch (exception &e) {
+            std::cout << e.what() << std::endl;
+        }
+    }
 
     Comparable getEntry(string word) const
     {
@@ -135,10 +169,8 @@ public:
         }
         else
         {
-            getEntryHelper(entries, root);
-            //have one that puts together a vector
-            //have one that returns a single comparable
-            return entries;
+            IndexEntry t (word, "string");
+            return getEntryHelper(t, root);
         }
     };
 
