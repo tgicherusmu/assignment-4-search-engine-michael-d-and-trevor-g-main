@@ -77,10 +77,7 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
     // extract the words
     string word;
 
-    const Comparable& getEntry(const Comparable& item) const
-    {
-        return getEntry(item, root)->element;
-    }
+
 
     while (ss >> word) {
         // see if word is in stoplist
@@ -129,7 +126,7 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
 }
 
 void IndexHandler::getTop50Words() {
-    TreeIndex.output(); // output tree
+    TreeIndex.prettyPrintTree(); // output tree
     vector<IndexEntry> allWords = TreeIndex.getEntries(); // get vector of all words
     cout << "\tWord - # of Appearances" << endl; // seeing how many times each word appears
     sort(allWords.begin(), allWords.end(), [](const IndexEntry& word1, const IndexEntry& word2) {
@@ -178,6 +175,12 @@ void IndexHandler::loadPersistenceFileIndexPersons() {
     }
     file.close();
 }
+
+const IndexHandler::Comparable& getEntry(const Comparable& item) const
+{
+    return getEntry(item, root)->element;
+}
+
 void IndexHandler::loadPersistenceFileIndexOrgs() {             // load the orgs file
     ifstream file("/home/pc/persistence_index/orgsindex.txt");  // open the file
     if (file.is_open()) {
@@ -252,8 +255,7 @@ void IndexHandler::savePersistenceFileIndexOrgs() {
 }
 void IndexHandler::savePersistenceFileIndexWords() {
     ofstream open("/home/pc/persistence_index/wordindex.txt");
-    TreeIndex.print(open);
-    open.close();
+    TreeIndex.prettyPrintTree();
 }
 
 // resetting tree
