@@ -13,7 +13,7 @@
 //watch out for apostrophies
 // add both versions for every word for an apostrophies if we dont clear
 //change all sets to unordered
-unordered_set<string> theStopWords{
+set<string> theStopWords{
     "able", "about", "above", "abroad", "according", "accordingly", "across", "actually", "adj", "after", "afterwards",
     "again", "against", "ago", "ahead", "ain't", "all", "allow", "allows", "almost", "alone", "along", "alongside",
     "already", "also", "although", "always", "am", "amid", "amidst", "among", "amongst", "an", "and", "another", "any",
