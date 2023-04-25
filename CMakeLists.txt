@@ -1,158 +1,433 @@
-cmake_minimum_required(VERSION 3.0.0)
-project(porter2-stemmer)
 
-option(USE_LIBCXX "Use libc++ for the C++ standard library" ON)
-
-include(CheckCXXCompilerFlag)
-
-if(UNIX OR MINGW)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
-
-    # if we don't already set the standard for the compiler, detect the
-    # best one available and use it
-    if(NOT "${CMAKE_CXX_FLAGS}" MATCHES "std=c\\+\\+(0x|11|1y|14)")
-        check_cxx_compiler_flag(-std=c++14 HAS_CXX14)
-        if(HAS_CXX14)
-            message("-- Compiler supports C++14 (using it)")
-            set(STDOPT "-std=c++14")
-        endif()
-
-        if(NOT STDOPT)
-            check_cxx_compiler_flag(-std=c++1y HAS_CXX1Y)
-            if(HAS_CXX1Y)
-                message("-- Compiler supports C++1y (using it)")
-                set(STDOPT "-std=c++1y")
-            endif()
-        endif()
-
-        if(NOT STDOPT)
-            check_cxx_compiler_flag(-std=c++11 HAS_CXX11)
-            if(HAS_CXX11)
-                message("-- Compiler supports C++11 (using it)")
-                set(STDOPT "-std=c++11")
-            endif()
-        endif()
-
-        if(NOT STDOPT)
-            check_cxx_compiler_flag(-std=c++0x HAS_CXX0X)
-            if(HAS_CXXOX)
-                message("-- Compiler supports C++0x (using it)")
-                set(STDOPT "-std=c++0x")
-            endif()
-        endif()
-
-        if(NOT STDOPT)
-            message(FATAL_ERROR
-                    "meta requires a compiler with at least C++0x support")
-        endif()
-
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STDOPT}")
-    endif()
-
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        if(CMAKE_GENERATOR STREQUAL "Ninja")
-          set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
-        endif()
-        if(USE_LIBCXX)
-            message("-- Locating libc++...")
-            find_library(LIBCXX_LIBRARY NAMES c++ cxx)
-            if(LIBCXX_LIBRARY)
-                message("-- Located libc++: ${LIBCXX_LIBRARY}")
-                set(LIBCXX_OPTIONS "-stdlib=libc++")
-                get_filename_component(LIBCXX_LIB_PATH ${LIBCXX_LIBRARY}
-                                       DIRECTORY)
-                find_path(LIBCXX_PREFIX c++/v1/algorithm
-                          PATHS ${LIBCXX_LIB_PATH}/../include
-                          ${CMAKE_SYSTEM_PREFIX_PATH})
-                set(LIBCXX_INCLUDE_DIR ${LIBCXX_PREFIX}/c++/v1/)
-                message("-- Located libc++ include path: ${LIBCXX_INCLUDE_DIR}")
-
-                message("--     Locating libc++'s abi...")
-                find_library(LIBCXXABI_LIBRARY NAMES c++abi)
-                find_library(LIBCXXRT_LIBRARY NAMES cxxrt)
-                if(LIBCXXABI_LIBRARY)
-                    message("--     Found libc++abi: ${LIBCXXABI_LIBRARY}")
-                    set(CXXABI_LIBRARY ${LIBCXXABI_LIBRARY})
-                elseif(LIBCXXRT_LIBRARY)
-                    message("--     Found libcxxrt: ${LIBCXXRT_LIBRARY}")
-                    set(CXXABI_LIBRARY ${LIBCXXRT_LIBRARY})
-                else()
-                    message("--     No abi library found. "
-                            "Attempting to continue without one...")
-                endif()
-            else()
-                message("-- Could not find libc++, will not use it.")
-            endif()
-        endif()
-    endif()
-
-    find_library(LIBDL_LIBRARY NAMES dl ldl)
-    if(LIBDL_LIBRARY)
-      set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} ${LIBDL_LIBRARY}")
-    endif()
-
-    if(LIBCXX_OPTIONS)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBCXX_OPTIONS}")
-    endif()
-
-    if(CXXABI_LIBRARY)
-      set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} ${LIBCXX_OPTIONS} ${CXXABI_LIBRARY} -L${LIBCXX_LIB_PATH}")
-    endif()
-    if(LIBCXX_INCLUDE_DIR)
-      set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES} ${LIBCXX_INCLUDE_DIR}")
-    endif()
-endif()
+#ifndef TREE_H
+#define TREE_H
+#define DEBUG
+#include "IndexEntry.h"
 
 
+#include <stdexcept>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
-add_library(porter2-stemmer porter2_stemmer.cpp)
-target_include_directories(porter2-stemmer PUBLIC ${PROJECT_SOURCE_DIR})
-target_compile_options(porter2-stemmer PUBLIC ${STDOPT})
+using namespace std;
 
-check_cxx_source_compiles("
-#include <experimental/string_view>
-int main() {
-    std::experimental::string_view sv = \"hello world\";
-    return 0;
-}" META_HAS_EXPERIMENTAL_STRING_VIEW)
 
-if (META_HAS_EXPERIMENTAL_STRING_VIEW)
-  target_compile_definitions(porter2-stemmer PUBLIC
-                             -DMETA_HAS_EXPERIMENTAL_STRING_VIEW)
-endif()
+// AvlTree class
+// This implementation is based on the unbalanced binary search tree and adds hight information 
+// to the nodes and a balance function to perform the needed rotations.
 
-# work around a bug in libstdc++ provided with gcc < 4.8.3 where a static
-# assertion fires when you have a non-empty hash functor
-check_cxx_source_compiles("
-#include <unordered_set>
-struct nonempty_hasher : public std::hash<int> { int i = 3; };
-int main() {
-    std::unordered_set<int, nonempty_hasher> s;
-    return 0;
-}" META_HAS_NONEMPTY_HASH_SUPPORT)
+template <typename Comparable>
+class AvlTree
+{
+private:
+    struct AvlNode
+    {
+        Comparable key;
+        AvlNode *left;
+        AvlNode *right;
+        int height;      // AVL tree: keeping track of the height is the differnce to a unbalanced binary search tree
 
-if (META_HAS_NONEMPTY_HASH_SUPPORT)
-  target_compile_definitions(porter2-stemmer PUBLIC
-                             -DMETA_HAS_NONEMPTY_HASH_SUPPORT)
-endif()
+        AvlNode(const Comparable &theKey, AvlNode *lt, AvlNode *rt, int h)
 
-if (HAS_CXX14 OR HAS_CXX1Y)
-    target_compile_definitions(porter2-stemmer PUBLIC -DMETA_HAS_CXX14=1)
-endif()
+            : key{theKey}, left{lt}, right{rt}, height{h} {}
+    };
 
-if(LIBDL_LIBRARY)
-    target_link_libraries(porter2-stemmer PUBLIC ${LIBDL_LIBRARY})
-endif()
+    AvlNode *root;
 
-if(CXXABI_LIBRARY)
-    target_link_libraries(porter2-stemmer PUBLIC ${CXXABI_LIBRARY})
-endif()
+public:
+    /**
+     * @brief Default constructor
+     */
+    AvlTree() : root{nullptr}
+    {
+    }
+    /*
+     * @brief Rule-of-3 Part 1: Copy constructor uses internal function clone()
+     *
+     */
+    AvlTree(const AvlTree &rhs) : root{nullptr}
+    {
+        root = clone(rhs.root);
+    }
+    /**
+     * @brief Rule-of-3 Part 2: Destroy the Binary Search Tree object using the internal
+     *   function makeEmpty()
+     */
+    ~AvlTree()
+    {
+        makeEmpty();
+    }
+    /**
+     * @brief Rule-of-3 Part 1: Copy constructor uses internal function clone().
+     */
+    AvlTree &operator=(const AvlTree &rhs)
+    {
+        makeEmpty();
+        root = clone(rhs.root);
+        return *this;
+    }
+    /**
+     * Returns true if x is found in the tree.
+     */
+    bool contains(const Comparable &x) const
+    {
+        return contains(x, root);
+    }
+    /**
+     * Test if the tree is logically empty.
+     * Return true if empty, false otherwise.
+     */
+    bool isEmpty() const
+    {
+        return root == nullptr;
+    }
+    /**
+     * Print the tree structure.
+     */
+    void prettyPrintTree() const
+    {
+        prettyPrintTree("", root, false);
+    }
+    /**
+     * Make the tree empty.
+     */
+    void makeEmpty()
+    {
+        makeEmpty(root);
+    }
+    /**
+     * Insert x into the tree; duplicates are ignored.
+     */
+    void insert(const Comparable &x)
+    {
+        insert(x, root);
+    }
+    /**
+     * Remove x from the tree. Nothing is done if x is not found.
+     */
+    void remove(const Comparable &x)
+    {
+        remove(x, root);
+    }
+    void clearElements()
+    {
+        makeEmpty(root);
+    }
 
-if(LIBCXX_LIBRARY)
-    target_include_directories(porter2-stemmer SYSTEM PUBLIC ${LIBCXX_INCLUDE_DIR})
-    target_compile_options(porter2-stemmer PUBLIC ${LIBCXX_OPTIONS})
-    target_link_libraries(porter2-stemmer PUBLIC -L${LIBCXX_LIB_PATH})
-endif()
+    //Comparable getEntryHelper(Comparable entry, AvlNode* node) {
+      //  if (entry == node->key) {
+        //    return node->key;
+        //}
 
-add_executable(superSearch main.cpp Document.cpp FileHandler.cpp IndexEntry.cpp IndexHandler.cpp porter2_stemmer.cpp QueryEngine.cpp Tree.h)
-target_link_libraries(superSearch porter2-stemmer)
+    //}
+
+ //put comparable in indexEntry
+ //if value that you are looking thenn go left, if higher then go right
+ //try catch block
+ //boolean if its there or not
+
+    Comparable getEntryHelper(Comparable entry, AvlNode* node) const{
+        try {
+            if (entry == node->key) {
+                return node->key;
+            }
+            if (entry > node->key){
+                if (node->right == nullptr) {
+                    throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
+                }
+                else{
+                    return getEntryHelper(entry, node->right);
+                }
+        }
+            if (entry < node->key){
+                if (node->left == nullptr) {
+                    throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
+                }
+                else{
+                    return getEntryHelper(entry, node->left);
+                }
+            }
+           // else if (entry < node->key) {
+             //   return getEntryHelper(entry, node->left);
+            //}
+            //else {
+              //  return getEntryHelper(entry, node->right);
+            //}
+        }
+        catch (exception &e) {
+            std::cout << e.what() << std::endl;
+        }
+    }
+
+    Comparable getEntry(string word) const
+    {
+        Comparable C;
+        if (isEmpty())
+        {
+            return C;
+        }
+        else
+        {
+            IndexEntry t (word, "string");
+            return getEntryHelper(t, root);
+        }
+    };
+
+    vector<Comparable> getEntries() const
+     {
+         vector<Comparable> entries;
+         if (isEmpty()) {
+             return entries;
+         }
+         else
+         {
+             getEntriesHelper(root, entries);
+             return entries;
+         }
+     };
+
+    //look at print for inspiration
+    void getEntriesHelper(AvlNode* node, vector<Comparable>& entries) const {
+        if (node == nullptr) {
+            return;
+        }
+        //for (const auto& key : node->items) {
+            entries.push_back(node->key);
+        //}
+        if (node->left != nullptr) {
+            getEntriesHelper(node->left, entries);
+        }
+        if (node->right != nullptr) {
+            getEntriesHelper(node->right, entries);
+        }
+    }
+
+
+private:
+    /**
+     * Internal method to insert into a subtree.
+     * x is the item to insert.
+     * t is the node that roots the subtree.
+     * Set the new root of the subtree.
+     */
+    void insert(const Comparable &x, AvlNode *&t)
+    {
+        if (t == nullptr)
+        {
+            t = new AvlNode{x, nullptr, nullptr, 0};
+            return; // a single node is always balanced
+        }
+        if (x < t->key)
+            insert(x, t->left);
+        else if (t->key < x)
+            insert(x, t->right);
+        else
+        {
+        } // Duplicate; do nothing
+
+        // This will call balance on the way back up the tree. It will only balance
+        // once at node the where the tree got imbalanced (called node alpha in the textbook)
+        // and update the height all the way back up the tree.
+        balance(t);
+    }
+    /**
+     * Internal method to remove from a subtree.
+     * x is the item to remove.
+     * t is the node that roots the subtree.
+     * Set the new root of the subtree.
+     */
+    // void remove(const Comparable& item)
+    // {
+    //     throw std::runtime_error("Not implemented yet!");
+    //     // same as in a binary search tree
+    //     // don't forget to balance the AVL tree after the deletion!
+    // }
+    /**
+     * Internal method to make subtree empty.
+     */
+    void makeEmpty(AvlNode *&t)
+    {
+        if (t == nullptr)
+            return;
+
+        makeEmpty(t->left);
+        makeEmpty(t->right);
+        delete t;
+        t = nullptr;
+    }
+
+ //make it comparable because its empty and we cannot return NULL
+
+
+    //const IndexHandler::Comparable& getEntry(const Comparable& item) const
+    //{
+      //  return getEntry(item, root)->element;
+    //}
+
+
+
+
+    /**
+     * Internal method to clone subtree.
+     */
+    AvlNode *clone(AvlNode *t) const
+    {
+        if (t == nullptr)
+            return nullptr;
+
+
+        return new AvlNode{t->key, clone(t->left), clone(t->right), t->height};
+    }
+    /**
+     * Pretty print the tree structure
+     * Uses preorder traversal with R and L swapped (NRL)
+     *
+     * Modified from: https://stackoverflow.com/questions/36802354/print-binary-tree-in-a-pretty-way-using-c
+     */
+    void prettyPrintTree(const std::string &prefix, const AvlNode *node, bool isRight) const
+    {
+        if (node == nullptr)
+            return;
+        std::cout << prefix;
+        // Note: this uses unicode characters for the tree structure. They might not print correctly on 
+        // all systems (Windows!?!) and all types of output devices.
+        std::cout << (isRight ? "├──" : "└──");
+        // print the value of the node
+        std::cout << node->key << std::endl;
+        // enter the next tree level - left and right branch
+        prettyPrintTree(prefix + (isRight ? "│   " : "    "), node->right, true);
+        prettyPrintTree(prefix + (isRight ? "│   " : "    "), node->left, false);
+    }
+    // Balancing: AVL Rotations
+
+    /**
+     * Return the height of node t or -1 if nullptr.
+     */
+    int height(AvlNode *t) const
+    {
+        return t == nullptr ? -1 : t->height;
+    }
+    static const int ALLOWED_IMBALANCE = 1; // 1 is the default; more will make balancing cheaper
+                                            // but the search less efficient.
+
+    /** 
+     * 1. Performs rotations if the the the difference of the height stored in t's two child nodes 
+     *    more than ALLOWED_IMBALANCE.
+     * 2. Updates the height information of the note t.
+     * 
+     * Assumes that the high information in the child nodes is correct. This is guaranteed by calling
+     * balance() recursivly from the inserted node up to the tree node (see insert()). Rotations will 
+     * only be performed for node alpha (parent of the parent of the inserted node). For all other nodes, 
+     * only the height will be updated. 
+     */
+    void balance(AvlNode *&t)
+    {
+        // special case: empty tree
+        if (t == nullptr)
+            return;
+        if (height(t->left) - height(t->right) > ALLOWED_IMBALANCE) // unbalancing insertion was left
+        {
+            if (height(t->left->left) >= height(t->left->right))
+                rotateWithLeftChild(t); // case 1 (outside)
+            else
+                doubleWithLeftChild(t); // case 2 (inside)
+        }
+        else if (height(t->right) - height(t->left) > ALLOWED_IMBALANCE) // unbalancing insertion was right
+        {
+            if (height(t->right->right) >= height(t->right->left))
+                rotateWithRightChild(t); // case 4 (outside)
+            else
+                doubleWithRightChild(t); // case 3 (inside)
+        }
+        // else ... no imbalance was created
+
+        // update height
+        t->height = max(height(t->left), height(t->right)) + 1;
+    }
+
+    int max(int lhs, int rhs) const
+    {
+        return lhs > rhs ? lhs : rhs;
+    }
+    /**
+     * Rotate binary tree node with left child.
+     * For AVL trees, this is a single rotation for case 1.
+     * Update heights, then set new root.
+     */
+    void rotateWithLeftChild(AvlNode *&k2)
+    {
+#ifdef DEBUG
+        cout << "need to rotateWithLeftChild for node " << k2->key << endl;
+        cout << "Before:" << endl;
+        prettyPrintTree();
+#endif
+
+        AvlNode *k1 = k2->left;
+        k2->left = k1->right;
+        k1->right = k2;
+        k2->height = max(height(k2->left), height(k2->right)) + 1;
+        k1->height = max(height(k1->left), k2->height) + 1;
+        k2 = k1;
+#ifdef DEBUG
+        cout << "After:" << endl;
+        prettyPrintTree();
+#endif
+    }
+    /**
+     * Rotate binary tree node with right child.
+     * For AVL trees, this is a single rotation for case 4.
+     * Update heights, then set new root.
+     */
+    void rotateWithRightChild(AvlNode *&k1)
+    {
+
+#ifdef DEBUG
+        cout << "need to rotateWithRightChild for node " << k1->key << endl;
+        cout << "Before:" << endl;
+        prettyPrintTree();
+#endif
+        AvlNode *k2 = k1->right;
+        k1->right = k2->left;
+        k2->left = k1;
+        k1->height = max(height(k1->left), height(k1->right)) + 1;
+        k2->height = max(height(k2->right), k1->height) + 1;
+        k1 = k2;
+#ifdef DEBUG
+
+        cout << "After:" << endl;
+        prettyPrintTree();
+#endif
+    }
+    /**
+     * Double rotate binary tree node: first left child.
+     * with its right child; then node k3 with new left child.
+     * For AVL trees, this is a double rotation for case 2.
+     * Update heights, then set new root.
+     */
+
+    void doubleWithLeftChild(AvlNode *&k3)
+    {
+#ifdef DEBUG
+        cout << "doubleWithLeftChild" << endl;
+#endif
+        rotateWithRightChild(k3->left);
+        rotateWithLeftChild(k3);
+    }
+    /**
+     * Double rotate binary tree node: first right child.
+     * with its left child; then node k1 with new right child.
+     * For AVL trees, this is a double rotation for case 3.
+     * Update heights, then set new root.
+     */
+    void doubleWithRightChild(AvlNode *&k1)
+    {
+#ifdef DEBUG
+        cout << "doubleWithRightChild" << endl;
+#endif
+        rotateWithLeftChild(k1->right);
+        rotateWithRightChild(k1);
+    }
+};
+
+#endif
