@@ -23,15 +23,15 @@ void IndexEntry::addDocToIdxEntry(const string& docName){
     }
 }
 
-bool IndexEntry::operator== (const IndexEntry& s) const {
-    return Word == s.Word;
-}
-bool IndexEntry::operator< (const IndexEntry& s) const {
-    return Word < s.Word;
-}
-bool IndexEntry::operator> (const IndexEntry& s) const {
-    return s.Word < Word;
-}
+// bool IndexEntry::operator== (const IndexEntry& s) const {
+//     return Word == s.Word;
+// }
+// bool IndexEntry::operator< (const IndexEntry& s) const {
+//     return Word < s.Word;
+// }
+// bool IndexEntry::operator> (const IndexEntry& s) const {
+//     return s.Word < Word;
+// }
 
 void IndexEntry::docNameSetInsert(const string &word) {
     DocNamesSet.insert(word);

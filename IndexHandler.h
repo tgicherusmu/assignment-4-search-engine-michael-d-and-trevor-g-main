@@ -29,7 +29,7 @@ public:
     void addOrgs(const string&,list<string>);
 
     // get sets
-    set<string>* getDocsFromTree(const string&);
+    set<string> getDocsFromTree(const string&);
     //set<string>* getDocsFromHashPerson(const string&word);
     //set<string>* getDocsFromHashOrgs(const string&word);
     int size;

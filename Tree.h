@@ -174,6 +174,19 @@ public:
         }
     };
 
+     vector<Comparable> getEntries() const
+     {
+         vector<Comparable> entries;
+         if (isEmpty()) {
+             return entries;
+         }
+         else
+         {
+             getEntriesHelper(entries, root);
+             return entries;
+         }
+     };
+    //look at print for inspiration
 
 
 
@@ -238,19 +251,6 @@ private:
       //  return getEntry(item, root)->element;
     //}
 
-     vector<Comparable> getEntries() const
-     {
-         vector<Comparable> entries;
-         if (isEmpty()) {
-             return entries;
-         }
-         else
-         {
-             getEntriesHelper(entries, root);
-             return entries;
-         }
-     };
-    //look at print for inspiration
 
 
 
