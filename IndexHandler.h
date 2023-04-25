@@ -29,6 +29,8 @@ public:
     // add persons
     void addPersons(const string&,list<string>);
     void addOrgs(const string&,list<string>);
+    //list<pair<string, string>> personsList;
+    //list<pair<string, string>> orgsList;
 
     // get unordered set later
     set<string> getDocsFromTree(const string&);
