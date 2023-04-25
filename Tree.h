@@ -187,7 +187,20 @@ public:
          }
      };
     //look at print for inspiration
-
+    void getEntriesHelper(AvlNode* node, vector<Comparable>& entries) {
+        if (node == nullptr) {
+            return;
+        }
+        for (const auto& item : node->items) {
+            entries.push_back(item);
+        }
+        if (node->left != nullptr) {
+            getEntriesHelper(node->left, entries);
+        }
+        if (node->right != nullptr) {
+            getEntriesHelper(node->right, entries);
+        }
+    }
 
 
 private:
