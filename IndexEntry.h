@@ -15,6 +15,7 @@ private:
     unordered_map<string,int> DocNames;
     set<string>DocNamesSet;
     int numDocs;
+    //CODE REVIEW COMMENT: get rid of numDocs and DocNameSet
 
 public:
     // constructors
@@ -57,7 +58,7 @@ public:
 
     void docNameSetInsert(const string&);
     void docNamesMapInsert(const string&, const int&);
-
+    //CODE REVIEW COMMENT: make everything public in class because we already have getters
 };
 
 
