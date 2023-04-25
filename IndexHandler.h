@@ -12,6 +12,8 @@
 #include <algorithm>
 #include<sstream>
 #include<unordered_map>
+#include<unordered_set>
+
 class IndexHandler {
 private:
     AvlTree<IndexEntry> TreeIndex;
@@ -28,7 +30,7 @@ public:
     void addPersons(const string&,list<string>);
     void addOrgs(const string&,list<string>);
 
-    // get sets
+    // get unordered set later
     set<string> getDocsFromTree(const string&);
     //set<string>* getDocsFromHashPerson(const string&word);
     //set<string>* getDocsFromHashOrgs(const string&word);
@@ -37,16 +39,7 @@ public:
     int getNumWords(){return numWords;}
     int getSet(const string&word, set<string>&set);
     int getEntry(const string&word, IndexEntry&entry);
-    // int getTreeSize(){
-    //     treeSize = TreeIndex.getSize();
-    //     return treeSize;
-    // }
-    // int getUniquePersons(){
-    //     return hashTablePersons.getUniqueSize();
-    // }
-    // int getUniqueOrgs(){
-    //     return hashTableOrgs.getUniqueSize();
-    // }
+
     void getTop50Words();
 
     void clearElements();
