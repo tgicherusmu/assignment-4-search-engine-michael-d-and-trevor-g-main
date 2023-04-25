@@ -174,7 +174,7 @@ public:
         }
     };
 
-     vector<Comparable> getEntries() const
+    vector<Comparable> getEntries() const
      {
          vector<Comparable> entries;
          if (isEmpty()) {
@@ -182,18 +182,19 @@ public:
          }
          else
          {
-             getEntriesHelper(entries, root);
+             getEntriesHelper(root, entries);
              return entries;
          }
      };
+
     //look at print for inspiration
-    void getEntriesHelper(AvlNode* node, vector<Comparable>& entries) {
+    void getEntriesHelper(AvlNode* node, vector<Comparable>& entries) const {
         if (node == nullptr) {
             return;
         }
-        for (const auto& item : node->items) {
-            entries.push_back(item);
-        }
+        //for (const auto& key : node->items) {
+            entries.push_back(node->key);
+        //}
         if (node->left != nullptr) {
             getEntriesHelper(node->left, entries);
         }
