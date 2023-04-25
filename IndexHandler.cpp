@@ -8,7 +8,12 @@
 // function get top 50 words will output all words in TreeIndex along with their number of appearances. it first calles treeindex's ouuutput function to print all words inn TreeIndex then it gets all words in TreeIndex as a vector of IndexEntry objects. It sorts this vector sin descrnng order based off of each objects number of documents using a custom comparator strutct
 #include "IndexHandler.h"
 // list of stop words
-set<string> theStopWords{
+//CODE REVIEW COMMENTS:
+//remove non alpha characters
+//watch out for apostrophies
+// add both versions for every word for an apostrophies if we dont clear
+//change all sets to unordered
+unordered_set<string> theStopWords{
     "able", "about", "above", "abroad", "according", "accordingly", "across", "actually", "adj", "after", "afterwards",
     "again", "against", "ago", "ahead", "ain't", "all", "allow", "allows", "almost", "alone", "along", "alongside",
     "already", "also", "although", "always", "am", "amid", "amidst", "among", "amongst", "an", "and", "another", "any",
@@ -59,7 +64,7 @@ set<string> theStopWords{
     "whichever", "while", "whilst", "whither", "who", "who'd", "whoever", "whole", "who'll", "whom", "whomever", "who's", "whose",
     "why", "will", "willing", "wish", "with", "within", "without", "wonder", "won't", "would", "wouldn't", "yes", "yet", "you",
     "you'd", "you'll", "your", "you're", "yours", "yourself", "yourselves", "you've", "zero"};
-
+//make stopword list a unordered set
 unordered_map<string, string> theHashedWords;
 // void IndexHandler::addPersons(const string&nameOfDoc, list<string> persons){
 //     for (auto it=persons.begin(); it != persons.end(); ++it)
@@ -79,8 +84,12 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
 
 
 
+
     while (ss >> word) {
-        // see if word is in stoplist
+        //CODE REVIEW COMMENTS (NEED TO CLEAN TO MAKE TREE SMALLER):
+        //see if word is in stoplist
+        //make everything in word lower case to clean
+        //remove all non alpha character or just remove commas and periods from the end and beginning of words
         auto it = theStopWords.find(word);  // check if word is in stoplist
         if (it != theStopWords.end()) {     // if it is in the stoplist, continue
             continue;
@@ -96,7 +105,7 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
         } else {  //
             // get stemmed version of word
             string temp = word;
-            Porter2Stemmer::trim(word);
+            //Porter2Stemmer::trim(word);
             Porter2Stemmer::stem(word);
             // add to table
             theHashedWords[temp] = word;
@@ -115,7 +124,12 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
         IndexEntry temp(word);
         TreeIndex.insert(temp);
         IndexEntry test = TreeIndex.getEntry(word);
-        //
+        //CODE REVIEW COMMENTS (Two Options: Stay same = slower, Choose first option adam provides):
+        //DO THIS: you either insert an IndexEntry for every word only after you are done parsing the entire dataset, or after you are done reading in a single file you update the map in each IndexEntry that is already in your AVLTree
+        //function need to return integer iand number of words in document as well as and an Index Entry because you need index entry created for that specifically
+        //^^^(DONT FORGET TO MAKE PUBLIC: instead of inserting temp, we can create index entry with already created map, and put that index entry into the tree
+        //whereever this function is called we should do index entries there instead
+
 
         // IndexEntry temp(word);
         // TreeIndex.insert(temp);
@@ -155,6 +169,8 @@ set<string> IndexHandler::getDocsFromTree(const string& word) {
         return result.getDocNamesSet();
     }
 }
+
+//CODE REVIEW COMMENT: change all to unordered set
 
 void IndexHandler::loadPersistenceFileIndexPersons() {
     ifstream file("/home/pc/persistence_index/personsindex.txt");
