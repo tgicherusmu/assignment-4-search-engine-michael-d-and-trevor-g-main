@@ -66,25 +66,30 @@ set<string> theStopWords{
     "you'd", "you'll", "your", "you're", "yours", "yourself", "yourselves", "you've", "zero"};
 //make stopword list a unordered set
 unordered_map<string, string> theHashedWords;
-// void IndexHandler::addPersons(const string&nameOfDoc, list<string> persons){
-//     for (auto it=persons.begin(); it != persons.end(); ++it)
-//         hashTablePersons.insert(*it, nameOfDoc);
-// }
-// void IndexHandler::addOrgs(const string&nameOfDoc, list<string> persons){
-//     for (auto it=persons.begin(); it != persons.end(); ++it)
-//         hashTableOrgs.insert(*it, nameOfDoc);
-// }
+//Trevor Note: addPersons and addOrgs need to be added back
+ //void IndexHandler::addPersons(const string&nameOfDoc, list<string> persons){
+   //  for (auto it=persons.begin(); it != persons.end(); ++it)
+     //    hashTablePersons.insert(*it, nameOfDoc);
+ //}
+ //void IndexHandler::addOrgs(const string&nameOfDoc, list<string> persons){
+   //  for (auto it=persons.begin(); it != persons.end(); ++it)
+     //    hashTableOrgs.insert(*it, nameOfDoc);
+ //}
+
+//void IndexHandler::addPersons(const string&nameOfDoc, list<string> persons){
+  //  for (auto it=persons.begin(); it != persons.end(); ++it)
+    //    personsList.push_back(make_pair(*it, nameOfDoc));
+//}
+//void IndexHandler::addOrgs(const string&nameOfDoc, list<string> persons){
+  //  for (auto it=persons.begin(); it != persons.end(); ++it)
+    //    orgsList.push_back(make_pair(*it, nameOfDoc));
+//}
 
 void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
     // put text of file in ss
     stringstream ss(docText);
-
     // extract the words
     string word;
-
-
-
-
     while (ss >> word) {
         //CODE REVIEW COMMENTS (NEED TO CLEAN TO MAKE TREE SMALLER):
         //see if word is in stoplist
@@ -139,6 +144,14 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
         test.addDocToIdxEntry(nameOfDoc);
     }
 }
+
+//void addPersons(){
+
+//}
+
+//void addOrgs(){
+
+//}
 
 void IndexHandler::getTop50Words() {
     TreeIndex.prettyPrintTree(); // output tree
