@@ -139,7 +139,7 @@ void FileHandler::outputResults(){
             char esc_char = 27;
             cout<<esc_char<<"[1m"<<doc.title<<esc_char<<"[0m"<<endl;
             cout<<doc.site.substr(0,10)<<" — ";
-            cout<<doc.textBlurb<<endl<<endl;;
+            //cout<<doc.textBlurb<<endl<<endl;;
 
             k++;
         }
