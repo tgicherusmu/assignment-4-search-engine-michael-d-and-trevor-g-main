@@ -33,6 +33,10 @@ class Document {
     void changeFile(string);
     //^^^^^^delete this and create new document object instead
     void parseDoc();
+    vector<string> getPersons() const; // Add this line
+    vector<string> getOrgs() const; // 
+    vector<string> persons; // Add this line
+    vector<string> orgs;  // Add this line
     //^^^^^^this can be deleted
     string getText();
     string getTextBlurb();
