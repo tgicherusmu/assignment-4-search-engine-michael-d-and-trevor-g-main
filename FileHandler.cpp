@@ -29,12 +29,12 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
     string query = q.getStemmedWord();
 
     // get docs for word
-    set<string>* temp ;//= i.getDocsFromTree(query);
+    set<string> temp = i.getDocsFromTree(query);
 
     // check if this is the first word being searched
     if(count!=0){
         // check if set is empty
-        if(temp==NULL){
+        if(temp.empty()){
             // clear intersect if AND search
             if(type==1){
                 intersect.clear();
@@ -48,12 +48,12 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
             intersect.clear();
 
             // get intersection of old and new set
-            set_intersection(temp->begin(),temp->end(),temp2.begin(),
+            set_intersection(temp.begin(),temp.end(),temp2.begin(),
                              temp2.end(),inserter(intersect,intersect.begin()));
         } // OR
         else if(type==2){
             // insert all elements into main set
-            for(const auto& e: *temp){
+            for(const auto& e: temp){
                 intersect.insert(e);
 
             }
@@ -63,8 +63,8 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
     // first word being searched
     else{
         // assign set to intersect
-        if(temp!=NULL){
-            intersect = *temp;
+        if(!temp.empty()){
+            intersect = temp;
         }
     }
 
@@ -77,10 +77,10 @@ void FileHandler::queryTreeNotWords(const string& word) {
     string query = q.getStemmedWord();
 
     // get docs
-    set<string> *temp;// = i.getDocsFromTree(query);
+    set<string> temp = i.getDocsFromTree(query);
 
     // check if set is empty
-    if (temp == NULL) {
+    if (temp.empty()) {
         return;
     } else {
         // copy intersect set and clear old
@@ -88,44 +88,44 @@ void FileHandler::queryTreeNotWords(const string& word) {
         intersect.clear();
 
         // remove docs with word (order matters)
-        set_difference(temp2.begin(), temp2.end(), temp->begin(),
-                       temp->end(), inserter(intersect, intersect.begin()));
+        set_difference(temp2.begin(), temp2.end(), temp.begin(),
+                       temp.end(), inserter(intersect, intersect.begin()));
     }
 }
 
-void FileHandler::queryHashPersons(const string&person){
-    // get set
-    set<string>* temp;// = i.getDocsFromHashPerson(person);
+// void FileHandler::queryHashPersons(const string&person){
+//     // get set
+//     set<string>* temp = i.getDocsFromHashPerson(person);
 
-    // check if set is empty
-    if(temp==NULL){
-        intersect.clear();
-    }else{
-        // copy intersect set and clear old
-        set<string> temp2 = intersect;
-        intersect.clear();
+//     // check if set is empty
+//     if(temp==NULL){
+//         intersect.clear();
+//     }else{
+//         // copy intersect set and clear old
+//         set<string> temp2 = intersect;
+//         intersect.clear();
 
-        // intersect
-        set_intersection(temp->begin(),temp->end(),temp2.begin(),
-                         temp2.end(),inserter(intersect,intersect.begin()));
-    }
-}
- void FileHandler::queryHashOrgs(const string&person){
-    // get set
-    set<string>* temp;// = i.getDocsFromHashOrgs(person);
+//         // intersect
+//         set_intersection(temp->begin(),temp->end(),temp2.begin(),
+//                          temp2.end(),inserter(intersect,intersect.begin()));
+//     }
+// }
+//  void FileHandler::queryHashOrgs(const string&person){
+//     // get set
+//     set<string>* temp = i.getDocsFromHashOrgs(person);
 
-    // check if set is empty
-    if(temp==NULL){
-        intersect.clear();
-    }else{
-        // copy intersect set and clear old
-        set<string> temp2 = intersect;
-        intersect.clear();
-        // intersect
-        set_intersection(temp->begin(),temp->end(),temp2.begin(),
-                         temp2.end(),inserter(intersect,intersect.begin()));
-    }
-}
+//     // check if set is empty
+//     if(temp==NULL){
+//         intersect.clear();
+//     }else{
+//         // copy intersect set and clear old
+//         set<string> temp2 = intersect;
+//         intersect.clear();
+//         // intersect
+//         set_intersection(temp->begin(),temp->end(),temp2.begin(),
+//                          temp2.end(),inserter(intersect,intersect.begin()));
+//     }
+// }
 
 void FileHandler::outputResults(){
     top15Sets();
