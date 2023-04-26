@@ -3,12 +3,14 @@
 #define TREE_H
 #define DEBUG
 #include "IndexEntry.h"
+#include "FilterEntry.h"
 
 
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -63,6 +65,9 @@ public:
      */
     AvlTree &operator=(const AvlTree &rhs)
     {
+        if(this == &rhs){
+            return *this;
+        }
         makeEmpty();
         root = clone(rhs.root);
         return *this;
@@ -70,10 +75,10 @@ public:
     /**
      * Returns true if x is found in the tree.
      */
-    bool contains(const Comparable &x) const
-    {
-        return contains(x, root);
-    }
+//    bool contains(const IndexEntry &x) const
+//    {
+//        return contains(x, root);
+//    }
     /**
      * Test if the tree is logically empty.
      * Return true if empty, false otherwise.
@@ -103,13 +108,24 @@ public:
     {
         insert(x, root);
     }
+
+    void insertEntry(const IndexEntry &x)
+    {
+        insertEntry(x, root);
+    }
+
+    void insertFilter(const FilterEntry &x)
+    {
+        insertFilter(x, root);
+    }
+
     /**
      * Remove x from the tree. Nothing is done if x is not found.
      */
-    void remove(const Comparable &x)
-    {
-        remove(x, root);
-    }
+//    void remove(const IndexEntry &x)
+//    {
+//        remove(x, root);
+//    }
     void clearElements()
     {
         makeEmpty(root);
@@ -169,7 +185,7 @@ public:
         }
         else
         {
-            IndexEntry t (word, "string");
+            Comparable t (word, "string");
             return getEntryHelper(t, root);
         }
     };
@@ -231,6 +247,55 @@ private:
         // and update the height all the way back up the tree.
         balance(t);
     }
+
+    void insertEntry(const IndexEntry &x, AvlNode *&t)
+    {
+        if (t == nullptr)
+        {
+            t = new AvlNode{x, nullptr, nullptr, 0};
+            return; // a single node is always balanced
+        }
+        if (x < t->key)
+            insert(x, t->left);
+        else if (t->key < x)
+            insert(x, t->right);
+        else
+        {
+            for (auto& item: x.uuidMap) {
+                t->key.uuidMap.emplace(item);
+            }
+        }
+
+        // This will call balance on the way back up the tree. It will only balance
+        // once at node the where the tree got imbalanced (called node alpha in the textbook)
+        // and update the height all the way back up the tree.
+        balance(t);
+    }
+
+    void insertFilter(const FilterEntry &x, AvlNode *&t)
+    {
+        if (t == nullptr)
+        {
+            t = new AvlNode{x, nullptr, nullptr, 0};
+            return; // a single node is always balanced
+        }
+        if (x < t->key)
+            insert(x, t->left);
+        else if (t->key < x)
+            insert(x, t->right);
+        else
+        {
+            for (auto& item: x.uuidSet) {
+                t->key.uuidSet.emplace(item);
+            }
+        }
+
+        // This will call balance on the way back up the tree. It will only balance
+        // once at node the where the tree got imbalanced (called node alpha in the textbook)
+        // and update the height all the way back up the tree.
+        balance(t);
+    }
+
     /**
      * Internal method to remove from a subtree.
      * x is the item to remove.
