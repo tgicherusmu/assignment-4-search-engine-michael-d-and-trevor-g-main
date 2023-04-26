@@ -74,6 +74,7 @@ vector<string> Document::getOrgs() const {
 }
 
 // getPerson needs to return a list of people mentioned in the file
+/*
 //TA Adam E: list<string> will be a linked list of people, not a vector
 list<string> Document::getPerson() {
     list<string> persons;
@@ -92,3 +93,4 @@ list<string> Document::getOrgs() {
 
     return orgs;
 }
+*/
