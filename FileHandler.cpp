@@ -11,16 +11,14 @@ using namespace std;
 
 void FileHandler::updateIndex(const string&file){
     // parses doc
-    doc.changeFile(file);
+    Document doc(file);
 
-
-    i.addDoc(file,doc.getText());
+    i.addDoc(doc);
 
     // add persons
-    i.addPersons(file,doc.getPerson());
+    i.addPersons(doc);
     // add orgs
-    i.addOrgs(file,doc.getOrgs());
-
+    i.addOrgs(doc);
 }
 void FileHandler::queryTreeWords(string word, int count, const int& type){
 
@@ -136,12 +134,12 @@ void FileHandler::outputResults(){
         for(const auto& e: top15){
             if(k>15)
                 break;
-            doc.changeFile(e.docName);
-            cout<<k<<". "<<doc.getSite()<<endl;
+            Document doc(e.docName);
+            cout<<k<<". "<<doc.site<<endl;
             char esc_char = 27;
-            cout<<esc_char<<"[1m"<<doc.getTitle()<<esc_char<<"[0m"<<endl;
-            cout<<doc.getPublishDate().substr(0,10)<<" — ";
-            cout<<doc.getTextBlurb()<<endl<<endl;;
+            cout<<esc_char<<"[1m"<<doc.title<<esc_char<<"[0m"<<endl;
+            cout<<doc.site.substr(0,10)<<" — ";
+            cout<<doc.textBlurb<<endl<<endl;;
 
             k++;
         }
@@ -158,8 +156,8 @@ void FileHandler::top15Sets(){
     stringstream ss;
     double inverseDocFreq = log(double(numFiles) / intersect.size());
     for(const auto&e:intersect){
-        doc.changeFile(e);
-        string temp = doc.getText();
+        Document doc(e);
+        string temp = doc.text;
         // specific metrics for each doc
         int score=0;
         int wordCount=0;
@@ -198,14 +196,14 @@ void FileHandler::viewDoc(const int choice) {
     stringstream ss;
     for(const auto& e: top15){
         if(k==choice){
-            doc.changeFile(e.docName);
+            Document doc(e.docName);
             char esc_char = 27;
             cout<<endl;
 
-            cout<<doc.getSite()<<endl;
-            cout<<esc_char<<"[1m"<<doc.getTitle()<<esc_char<<"[0m"<<endl;
-            cout<<doc.getPublishDate().substr(0,10)<<" — ";
-            string temp = doc.getText();
+            cout<<doc.site<<endl;
+            cout<<esc_char<<"[1m"<<doc.title<<esc_char<<"[0m"<<endl;
+            cout<<doc.site.substr(0,10)<<" — ";
+            string temp = doc.text;
 
             string word;
             stringstream ss(temp);
