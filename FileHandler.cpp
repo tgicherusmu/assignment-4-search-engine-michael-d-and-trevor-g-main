@@ -29,7 +29,7 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
     string query = q.getStemmedWord();
 
     // get docs for word
-    set<string>* temp = i.getDocsFromTree(query);
+    set<string>* temp ;//= i.getDocsFromTree(query);
 
     // check if this is the first word being searched
     if(count!=0){
@@ -77,7 +77,7 @@ void FileHandler::queryTreeNotWords(const string& word) {
     string query = q.getStemmedWord();
 
     // get docs
-    set<string> *temp = i.getDocsFromTree(query);
+    set<string> *temp;// = i.getDocsFromTree(query);
 
     // check if set is empty
     if (temp == NULL) {
@@ -93,39 +93,39 @@ void FileHandler::queryTreeNotWords(const string& word) {
     }
 }
 
-// void FileHandler::queryHashPersons(const string&person){
-//     // get set
-//     set<string>* temp = i.getDocsFromHashPerson(person);
+void FileHandler::queryHashPersons(const string&person){
+    // get set
+    set<string>* temp;// = i.getDocsFromHashPerson(person);
 
-//     // check if set is empty
-//     if(temp==NULL){
-//         intersect.clear();
-//     }else{
-//         // copy intersect set and clear old
-//         set<string> temp2 = intersect;
-//         intersect.clear();
+    // check if set is empty
+    if(temp==NULL){
+        intersect.clear();
+    }else{
+        // copy intersect set and clear old
+        set<string> temp2 = intersect;
+        intersect.clear();
 
-//         // intersect
-//         set_intersection(temp->begin(),temp->end(),temp2.begin(),
-//                          temp2.end(),inserter(intersect,intersect.begin()));
-//     }
-// }
-//  void FileHandler::queryHashOrgs(const string&person){
-//     // get set
-//     set<string>* temp = i.getDocsFromHashOrgs(person);
+        // intersect
+        set_intersection(temp->begin(),temp->end(),temp2.begin(),
+                         temp2.end(),inserter(intersect,intersect.begin()));
+    }
+}
+ void FileHandler::queryHashOrgs(const string&person){
+    // get set
+    set<string>* temp;// = i.getDocsFromHashOrgs(person);
 
-//     // check if set is empty
-//     if(temp==NULL){
-//         intersect.clear();
-//     }else{
-//         // copy intersect set and clear old
-//         set<string> temp2 = intersect;
-//         intersect.clear();
-//         // intersect
-//         set_intersection(temp->begin(),temp->end(),temp2.begin(),
-//                          temp2.end(),inserter(intersect,intersect.begin()));
-//     }
-// }
+    // check if set is empty
+    if(temp==NULL){
+        intersect.clear();
+    }else{
+        // copy intersect set and clear old
+        set<string> temp2 = intersect;
+        intersect.clear();
+        // intersect
+        set_intersection(temp->begin(),temp->end(),temp2.begin(),
+                         temp2.end(),inserter(intersect,intersect.begin()));
+    }
+}
 
 void FileHandler::outputResults(){
     top15Sets();
