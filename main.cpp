@@ -6,7 +6,10 @@
 #include<limits>
 #include <sys/stat.h>
 using namespace std;
-namespace fs = std::filesystem;
+namespace fs = std::__fs::filesystem;
+
+// todo: test AVL Tree building, test IndexEntry constructor
+
 
 FileHandler files;
 bool parsed = false;
@@ -182,17 +185,17 @@ void getSearch(){
             case 1:{
                 // can't use alone
                 getline(ss,word,' ');
-                files.queryHashPersons(word);
+                //files.queryHashPersons(word);
                 break;
             }
             case 2:{
                 getline(ss,word,' ');
-                files.queryHashOrgs(word);
+                //files.queryHashOrgs(word);
                 break;
             }
             case 3:{
                 getline(ss,word,' ');
-                files.queryTreeNotWords(word);
+                //files.queryTreeNotWords(word);
                 break;
             }
         }
