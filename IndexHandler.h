@@ -4,6 +4,8 @@
 #include "Tree.h"
 #include "porter2_stemmer.h"
 #include"IndexEntry.h"
+#include"FilterEntry.h"
+#include"Document.h"
 #include <vector>
 #include<list>
 #include <set>
@@ -17,18 +19,18 @@
 class IndexHandler {
 private:
     AvlTree<IndexEntry> TreeIndex;
-    // HashTable<string, string> hashTablePersons;
-    // HashTable<string, string> hashTableOrgs;
+    AvlTree<FilterEntry> PeopleTree;
+    AvlTree<FilterEntry> OrgsTree;
     int numWords=0;
     int treeSize=0;
 
 public:
     // add words to tree
-    void addDoc(const string&, const string&);
+    void addDoc(const Document&);
 
     // add persons
-    void addPersons(const string&,list<string>);
-    void addOrgs(const string&,list<string>);
+    void addPersons(const Document&);
+    void addOrgs(const Document&);
     //list<pair<string, string>> personsList;
     //list<pair<string, string>> orgsList;
 
