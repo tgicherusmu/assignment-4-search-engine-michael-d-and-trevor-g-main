@@ -7,6 +7,7 @@
 // if the word is not in stoplist then it increments a counter called numWords then checks to see if the word has already been hashed and if its been hashed then it replaces word with hashed calue if it has not been hashed then it gets the stemmed version of the word via using Porter2Stemmmer library
 // function get top 50 words will output all words in TreeIndex along with their number of appearances. it first calles treeindex's ouuutput function to print all words inn TreeIndex then it gets all words in TreeIndex as a vector of IndexEntry objects. It sorts this vector sin descrnng order based off of each objects number of documents using a custom comparator strutct
 #include "IndexHandler.h"
+#include "FilterEntry.h"
 // list of stop words
 //CODE REVIEW COMMENTS:
 //remove non alpha characters
@@ -85,9 +86,11 @@ unordered_map<string, string> theHashedWords;
     //    orgsList.push_back(make_pair(*it, nameOfDoc));
 //}
 
-void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
+void IndexHandler::addDoc(const Document& doc) {
     // put text of file in ss
-    stringstream ss(docText);
+    stringstream ss(doc.text);
+    unordered_map<string, int> wordMap; //maps word to appearance count for this document
+
     // extract the words
     string word;
     while (ss >> word) {
@@ -101,7 +104,7 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
         }
 
         // TA Adam E:  you only want to increment the number of words every time you find a new word? right now, you incremenet for every word you have
-        numWords++;  // increment number of words
+//        numWords++;  // increment number of words
         // check if word has been hashed
         auto it2 = theHashedWords.find(word);  // check if word is in theHashedWords
         if (it2 != theHashedWords.end()) {     // if it is in theHashedWords, continue
@@ -121,14 +124,16 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
         if (word.empty())
             continue;
 
+        auto iter = wordMap.emplace(word, 0);
+        iter.first->second++;
+
         // insert word to tree
         // std::vector<IndexEntry> temp;
         // temp.push_back(IndexEntry(word));
         // IndexEntry temp(word);
         // TreeIndex.insert(temp);
-        IndexEntry temp(word);
-        TreeIndex.insert(temp);
-        IndexEntry test = TreeIndex.getEntry(word);
+//        TreeIndex.insert(temp);
+//        IndexEntry test = TreeIndex.getEntry(word);
         //CODE REVIEW COMMENTS (Two Options: Stay same = slower, Choose first option adam provides):
         //DO THIS: you either insert an IndexEntry for every word only after you are done parsing the entire dataset, or after you are done reading in a single file you update the map in each IndexEntry that is already in your AVLTree
         //function need to return integer iand number of words in document as well as and an Index Entry because you need index entry created for that specifically
@@ -141,17 +146,26 @@ void IndexHandler::addDoc(const string& nameOfDoc, const string& docText) {
         // const IndexEntry& test = TreeIndex.getEntry(word);
 
         // add doc to entry
-        test.addDocToIdxEntry(nameOfDoc);
+//        test.addDocToIdxEntry(doc.title);
+    }
+
+    //now we can fill the AVLTree with the wordMap
+    for (auto& wordItem: wordMap) {
+        TreeIndex.insertEntry(IndexEntry(wordItem.first, doc.uuid, wordItem.second));
     }
 }
 
-//void addPersons(){
+void IndexHandler::addPersons(const Document& doc){
+    for (auto& name: doc.people) {
+        PeopleTree.insertFilter(FilterEntry(name, doc.uuid));
+    }
+}
 
-//}
-
-//void addOrgs(){
-
-//}
+void IndexHandler::addOrgs(const Document& doc){
+    for (auto& name: doc.orgs) {
+        OrgsTree.insertFilter(FilterEntry(name, doc.uuid));
+    }
+}
 
 void IndexHandler::getTop50Words() {
     TreeIndex.prettyPrintTree(); // output tree
@@ -249,7 +263,7 @@ void IndexHandler::loadPersistenceFileIndexWords() {
             int numDocsInt;
             getline(ss, numDocs, ',');
             numDocsInt = stoi(numDocs);
-            IndexEntry idx(word, numDocsInt);
+            IndexEntry idx(word);
 
             string fileName, freqStr;
             int freq;
@@ -258,7 +272,7 @@ void IndexHandler::loadPersistenceFileIndexWords() {
                 getline(ss, freqStr, ',');
                 freq = stoi(freqStr);
 
-                idx.docNameSetInsert(fileName);         // insert the file name into the set
+//                idx.docNameSetInsert(fileName);         // insert the file name into the set
                 idx.docNamesMapInsert(fileName, freq);  // insert the file name and the frequency into the map
             }
             TreeIndex.insert(idx);
