@@ -20,7 +20,7 @@ void Document::parseDoc() {
 
     // get all the text from file
     //char text[1000000];
-    char* text = new char[maxChars];
+    //char* text = new char[maxChars];
     d.ParseStream(wrap);
 }
 string Document::getText() {  // getText returns the text from the JSON file //getText returns the text from the JSON file
@@ -70,7 +70,7 @@ string Document::getSite() {
 list<string> Document::getPerson() {
     list<string> persons;
     for (rapidjson::Value::ConstValueIterator itr = d["entities"].GetObject()["persons"].Begin(); itr != d["entities"].GetObject()["persons"].End(); ++itr) {
-        persons.emplace_back(itr->GetObject()["name"].GetString());
+        persons.__emplace_back(itr->GetObject()["name"].GetString());
     }
 
     return persons;
@@ -79,7 +79,7 @@ list<string> Document::getPerson() {
 list<string> Document::getOrgs() {
     list<string> orgs;
     for (rapidjson::Value::ConstValueIterator itr = d["entities"].GetObject()["organizations"].Begin(); itr != d["entities"].GetObject()["organizations"].End(); ++itr) {
-        orgs.emplace_back(itr->GetObject()["name"].GetString());
+        orgs.__emplace_back(itr->GetObject()["name"].GetString());
     }
 
     return orgs;
