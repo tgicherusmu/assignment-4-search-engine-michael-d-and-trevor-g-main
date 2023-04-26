@@ -24,7 +24,6 @@ class FileHandler {
     };
 
     IndexHandler i;
-    Document doc;
     QueryEngine q;
 
     set<string> intersect;
