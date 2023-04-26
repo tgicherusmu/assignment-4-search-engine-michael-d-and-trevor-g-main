@@ -35,8 +35,8 @@ class Document {
     void parseDoc();
     vector<string> getPersons() const; // Add this line
     vector<string> getOrgs() const; // 
-    vector<string> persons; // Add this line
-    vector<string> orgs;  // Add this line
+    vector<string> persons_vec; // Add this line
+    vector<string> orgs_vec;  // Add this line
     //^^^^^^this can be deleted
     string getText();
     string getTextBlurb();
