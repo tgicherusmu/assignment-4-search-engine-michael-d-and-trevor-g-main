@@ -64,7 +64,15 @@ string Document::getPublishDate() {
 // getSite needs to return the URL of the file
 string Document::getSite() {
     return d["url"].GetString();
+ }
+    
+vector<string> Document::getPersons() const {
+    return persons;
 }
+vector<string> Document::getOrgs() const {
+    return orgs;
+}
+
 // getPerson needs to return a list of people mentioned in the file
 //TA Adam E: list<string> will be a linked list of people, not a vector
 list<string> Document::getPerson() {
