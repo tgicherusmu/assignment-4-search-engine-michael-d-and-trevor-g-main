@@ -1,11 +1,3 @@
-// insert stopword vector
-// add an unordered map called hashed word that maps strings to strings
-// make a function called addPerson that takes in nameOfDoc and a list of strings called persons. it should iterate through each string in the list and insert it into a hashtable called hashTablePersons along with document anmes
-// addOrds function will take two arguments, a string called nameOfDoc and a list of strings called persons. It iterates through each string in the list and inserts it into a hash table called hashTableOrds along with the document name
-// the function addDoc takes two arguments a string called nameOfDoc and a string called persons. it iterates through seach string and inserts it into the hashtable hashTableOrgs along with the ducment names
-// a dunction addDoc will take two arguemnsta a tring called nameOfDoc and a string called DocText. It extracts all the words from the text using stringstream then checks to see if the word is a stop word
-// if the word is not in stoplist then it increments a counter called numWords then checks to see if the word has already been hashed and if its been hashed then it replaces word with hashed calue if it has not been hashed then it gets the stemmed version of the word via using Porter2Stemmmer library
-// function get top 50 words will output all words in TreeIndex along with their number of appearances. it first calles treeindex's ouuutput function to print all words inn TreeIndex then it gets all words in TreeIndex as a vector of IndexEntry objects. It sorts this vector sin descrnng order based off of each objects number of documents using a custom comparator strutct
 #include "IndexHandler.h"
 #include "FilterEntry.h"
 // list of stop words
@@ -14,6 +6,7 @@
 //watch out for apostrophies
 // add both versions for every word for an apostrophies if we dont clear
 //change all sets to unordered
+// insert stopword vector
 set<string> theStopWords{
     "able", "about", "above", "abroad", "according", "accordingly", "across", "actually", "adj", "after", "afterwards",
     "again", "against", "ago", "ahead", "ain't", "all", "allow", "allows", "almost", "alone", "along", "alongside",
@@ -66,12 +59,16 @@ set<string> theStopWords{
     "why", "will", "willing", "wish", "with", "within", "without", "wonder", "won't", "would", "wouldn't", "yes", "yet", "you",
     "you'd", "you'll", "your", "you're", "yours", "yourself", "yourselves", "you've", "zero"};
 //make stopword list a unordered set
+
+// add an unordered map called hashed word that maps strings to strings
 unordered_map<string, string> theHashedWords;
 //Trevor Note: addPersons and addOrgs need to be added back
+// //make a function called addPerson that takes in nameOfDoc and a list of strings called persons. it should iterate through each string in the list and insert it into a hashtable called hashTablePersons along with document anmes
  //void IndexHandler::addPersons(const string&nameOfDoc, list<string> persons){
    //  for (auto it=persons.begin(); it != persons.end(); ++it)
      //    hashTablePersons.insert(*it, nameOfDoc);
  //}
+// //addOrds function will take two arguments, a string called nameOfDoc and a list of strings called persons. It iterates through each string in the list and inserts it into a hash table called hashTableOrds along with the document name
  //void IndexHandler::addOrgs(const string&nameOfDoc, list<string> persons){
    //  for (auto it=persons.begin(); it != persons.end(); ++it)
      //    hashTableOrgs.insert(*it, nameOfDoc);
@@ -86,6 +83,8 @@ unordered_map<string, string> theHashedWords;
     //    orgsList.push_back(make_pair(*it, nameOfDoc));
 //}
 
+// the function addDoc takes two arguments a string called nameOfDoc and a string called persons. it iterates through seach string and inserts it into the hashtable hashTableOrgs along with the ducment names
+// a dunction addDoc will take two arguemnsta a tring called nameOfDoc and a string called DocText. It extracts all the words from the text using stringstream then checks to see if the word is a stop word
 void IndexHandler::addDoc(const Document& doc) {
     // put text of file in ss
     stringstream ss(doc.text);
@@ -167,6 +166,7 @@ void IndexHandler::addOrgs(const Document& doc){
     }
 }
 
+// function get top 50 words will output all words in TreeIndex along with their number of appearances. it first calles treeindex's ouuutput function to print all words inn TreeIndex then it gets all words in TreeIndex as a vector of IndexEntry objects. It sorts this vector sin descrnng order based off of each objects number of documents using a custom comparator strutct
 void IndexHandler::getTop50Words() {
     TreeIndex.prettyPrintTree(); // output tree
     vector<IndexEntry> allWords = TreeIndex.getEntries(); // get vector of all words

@@ -16,27 +16,21 @@ class FileHandler {
         double metric;
 
         docWithMetrc(const string doc, const double met): docName(doc), metric(met){}
-
         bool operator< (const docWithMetrc& s) const {
             return metric > s.metric;
         }
-
     };
 
     IndexHandler i;
     QueryEngine q;
-
     set<string> intersect;
     set<docWithMetrc> top15;
     int numFiles;
-
     string mainWord;
+
 public:
     // add file to update tree
     void updateIndex(const string&);
-    // output tree
-
-
     // get results from tree
     void queryTreeWords(string, int count, const int&);
     void queryTreeNotWords(const string&);
@@ -49,12 +43,9 @@ public:
     void getTop50Words();
 
      int getNumWords(){ return i.getNumWords();};
-    int getTreeSize(){//return i.getTreeSize();
-    };
-    int getNumUniquePersons(){//return i.getUniquePersons();
-    };
-    int getNumUniqueOrgs(){//return i.getUniqueOrgs();
-    };
+    void getTreeSize(){};
+    void getNumUniquePersons(){};
+    void getNumUniqueOrgs(){};
 
     void loadPersonIndex(){ i.loadPersistenceFileIndexPersons();};
     void loadOrgsIndex(){ i.loadPersistenceFileIndexOrgs();};
@@ -73,7 +64,4 @@ public:
     void viewDoc(const int);
     void clearTop15(){ top15.clear();}
 };
-
-
-
 #endif

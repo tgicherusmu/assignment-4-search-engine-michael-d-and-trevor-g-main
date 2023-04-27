@@ -154,5 +154,5 @@ cmake_minimum_required(VERSION 3.0.0)
      target_link_libraries(porter2-stemmer PUBLIC -L${LIBCXX_LIB_PATH})
  endif()
 
- add_executable(superSearch main.cpp Document.cpp FileHandler.cpp IndexEntry.cpp IndexHandler.cpp porter2_stemmer.cpp QueryEngine.cpp Tree.h FilterEntry.h)
+ add_executable(superSearch main.cpp Document.h FileHandler.cpp IndexEntry.cpp IndexHandler.cpp porter2_stemmer.cpp QueryEngine.cpp Tree.h FilterEntry.h)
  target_link_libraries(superSearch porter2-stemmer)

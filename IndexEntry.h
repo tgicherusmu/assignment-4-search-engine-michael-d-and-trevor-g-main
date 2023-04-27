@@ -13,20 +13,13 @@ public:
 
     string Word;
     unordered_map<string,int> uuidMap;
-//    set<string>DocNamesSet;
-//    int numDocs;
-    //CODE REVIEW COMMENT: get rid of numDocs and DocNameSet
-    //string word;
-    //double tf;
-    //vector<int> positions;
 
-    // constructors
-    // IndexEntry(string word, const string& docName): Word(std::move(word)){
     IndexEntry(string word, const string& docName, int count = 1){
         Word = word;
         uuidMap[docName]=count;
     }
     IndexEntry();
+
     // constructor ONLY for operator==
     explicit IndexEntry(string word): Word(word){}
 //    IndexEntry(string word, const int num): Word(std::move(word)),numDocs(num) {}
@@ -34,17 +27,16 @@ public:
     // add doc to DocNames if word exists
     void addDocToIdxEntry(const string&);
 
-//    IndexEntry(const std::string& w, double t, const std::vector<int>& p);
-    //std::string getWord() const;
-    //double getTF() const;
-    //std::vector<int> getPositions() const;
 
+//operator< takes an IndexEntry called s as its argument and returns  true true if this InexEntry's Word field is less than s's word field
     bool operator< (const IndexEntry& s) const{
         return this->Word < s.Word;
     }
+//operator> takes an IndexEntry called s as its argument and returns true if this IndexEntry's word field is greater than s's word field
     bool operator> (const IndexEntry& s) const {
         return this->Word > s.Word;
     }
+//second method called operator== takes an IndexEntry called s as its argument returns true if indexentry's word field is less than s's word field
     bool operator== (const IndexEntry& s) const {
         return this->Word == s.Word;
     }
@@ -57,6 +49,7 @@ public:
         os<<endl;
         return os;
     }
+
     set<string> getDocNamesSet(){
         set<string> DocNamesSet;
         for (auto& item: uuidMap) {
@@ -64,14 +57,9 @@ public:
         }
         return DocNamesSet;
     }
+
     int getNumDocs() const { return uuidMap.size(); }
-    //int getCount() const { return count; }
     string getWord(){ return Word;}
-
-//    void docNameSetInsert(const string&);
     void docNamesMapInsert(const string&, const int&);
-    //CODE REVIEW COMMENT: make everything public in class because we already have getters
 };
-
-
 #endif

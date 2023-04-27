@@ -1,18 +1,10 @@
-//updateIndex parses in string file
-//queryTreeWord takes in string words, integers count, and integer type
-//queryTree will then update the word and get documents for the word then checks if this i the first word being checked or not
-//If it is not the first word then it checks if the set is empty or not
-//If its empty it becomes an AND search
-//If it is an OR search that it puts all items into the main set
-//if it is the first word being searched then it assigns a set to intersect
 #include "FileHandler.h"
 
 using namespace std;
 
-void FileHandler::updateIndex(const string&file){
+void FileHandler::updateIndex(const string&file){ //updateIndex parses components in string file
     // parses doc
     Document doc(file);
-
     i.addDoc(doc);
 
     // add persons
@@ -20,8 +12,9 @@ void FileHandler::updateIndex(const string&file){
     // add orgs
     i.addOrgs(doc);
 }
-void FileHandler::queryTreeWords(string word, int count, const int& type){
 
+//queryTreeWord takes in string words, integers count, and integer type
+void FileHandler::queryTreeWords(string word, int count, const int& type){
     // update word
     q.changeWord(word);
     string query = q.getStemmedWord();
@@ -39,7 +32,7 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
             }
             return;
         }
-        // AND
+
         if(type==1){
             // copy intersect set and clear to be able to form new intersect
             set<string> temp2 = intersect;
@@ -68,6 +61,9 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
 
 
 }// todo clear sets to do multiple searchs and reset p/o/w
+
+
+//queryTree will then update the word and get documents for the word then checks if this i the first word being checked or not
 void FileHandler::queryTreeNotWords(const string& word) {
 
     // update word
@@ -108,6 +104,7 @@ void FileHandler::queryTreeNotWords(const string& word) {
 //                          temp2.end(),inserter(intersect,intersect.begin()));
 //     }
 // }
+
 //  void FileHandler::queryHashOrgs(const string&person){
 //     // get set
 //     set<string>* temp = i.getDocsFromHashOrgs(person);
@@ -145,8 +142,8 @@ void FileHandler::outputResults(){
         }
         intersect.clear();
     }
-
 }
+
 void FileHandler::top15Sets(){
 
     string MainWord = mainWord;
@@ -179,9 +176,11 @@ void FileHandler::top15Sets(){
         ss.clear();
     }
 }
+
 void FileHandler::getTop50Words(){
     i.getTop50Words();
 }
+
 void FileHandler::clear() {
     intersect.clear();
     top15.clear();
@@ -191,6 +190,7 @@ void FileHandler::clear() {
     i.clear();
 
 }
+
 void FileHandler::viewDoc(const int choice) {
     int k=1;
     stringstream ss;
