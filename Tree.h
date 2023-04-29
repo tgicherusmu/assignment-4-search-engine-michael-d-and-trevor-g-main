@@ -143,38 +143,50 @@ public:
  //try catch block
  //boolean if its there or not
 
-    Comparable getEntryHelper(Comparable entry, AvlNode* node) const{
-        try {
-            if (entry == node->key) {
-                return node->key;
-            }
-            if (entry > node->key){
-                if (node->right == nullptr) {
-                    throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
-                }
-                else{
-                    return getEntryHelper(entry, node->right);
-                }
+    //Comparable getEntryHelper(Comparable entry, AvlNode* node) const{
+    //AvlNode <Comparable>(*) getEntryHelper(Comparable entry, const AvlNode* node) const {
+    Comparable getEntryHelper(const Comparable& entry, const AvlNode* node) const {
+        if (node == nullptr) {
+            return Comparable();
         }
-            if (entry < node->key){
-                if (node->left == nullptr) {
-                    throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
-                }
-                else{
-                    return getEntryHelper(entry, node->left);
-                }
-            }
-           // else if (entry < node->key) {
-             //   return getEntryHelper(entry, node->left);
-            //}
-            //else {
-              //  return getEntryHelper(entry, node->right);
-            //}
-        }
-        catch (exception &e) {
-            std::cout << e.what() << std::endl;
+        if (entry > node->key) {
+            return getEntryHelper(entry, node->right);
+        } else if (entry < node->key) {
+            return getEntryHelper(entry, node->left);
+        } else {
+            return node->key;
         }
     }
+
+
+//        }
+//    AvlNode<Comparable>*  getEntryHelper(Comparable entry, const AvlNode<Comparable>* node) const
+//        {
+//            try {
+//                if (entry == node) {
+//                    return node;
+//                }
+//                if (entry > node){
+//                    if (node->right == nullptr) {
+//                        throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
+//                    }
+//                    else{
+//                        return getEntryHelper(entry, node->right);
+//                    }
+//                }
+//                if (entry < node){
+//                    if (node->left == nullptr) {
+//                        throw std::runtime_error("DSAVLTree find(): Search Element not in tree");
+//                    }
+//                    else{
+//                        return getEntryHelper(entry, node->left);
+//                    }
+//                }
+//            }
+//            catch (exception &e) {
+//                std::cout << e.what() << std::endl;
+//            }
+//        }
 
     Comparable getEntry(string word) const
     {
