@@ -36,6 +36,14 @@ public:
     void queryTreeNotWords(const string&);
     void queryHashPersons(const string&);
     void queryHashOrgs(const string&);
+    unordered_set<string> temp;
+    //set<string> getDocsByPerson(const string &person);
+    void queryPersons(const string &person);
+    void queryOrgs(const string &orgs);
+
+
+
+
 
 
     // output resulting set
@@ -61,7 +69,10 @@ public:
     void top15Sets();
     void clear();
 
+
+
     void viewDoc(const int);
     void clearTop15(){ top15.clear();}
+
 };
 #endif
