@@ -51,9 +51,9 @@ public:
     void getTop50Words();
 
      int getNumWords(){ return i.getNumWords();};
-    void getTreeSize(){};
-    void getNumUniquePersons(){};
-    void getNumUniqueOrgs(){};
+//     void getTreeSize(){};
+//     void getNumUniquePersons(){};
+//     void getNumUniqueOrgs(){};
 
     void loadPersonIndex(){ i.loadPersistenceFileIndexPersons();};
     void loadOrgsIndex(){ i.loadPersistenceFileIndexOrgs();};
