@@ -36,14 +36,18 @@ public:
 
     // get unordered set later
     set<string> getDocsFromTree(const string&);
-    //set<string>* getDocsFromHashPerson(const string&word);
+    set<string>* getDocsFromHashPerson(const string&word);
     //set<string>* getDocsFromHashOrgs(const string&word);
+    unordered_set<string> getDocFromPerson(const string& person);
+    unordered_set<string> getDocFromOrgs(const string& word);
+
     int size;
     int getSize(){ return size;}
     int getNumWords(){return numWords;}
     int getSet(const string&word, set<string>&set);
     int getEntry(const string&word, IndexEntry&entry);
-
+    //unordered_set<string> getDocsByPerson(const string &person);
+    void queryPersons(const string &person);
     void getTop50Words();
 
     void clearElements();
