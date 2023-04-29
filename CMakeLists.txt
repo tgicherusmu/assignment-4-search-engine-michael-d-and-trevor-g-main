@@ -1,4 +1,4 @@
-//TA ADAM
+#TA ADAM
 cmake_minimum_required(VERSION 3.15)
 project(HelloWorld VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
@@ -11,7 +11,7 @@ set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-//TA Michael
+#TA Michael
 #cmake_minimum_required(VERSION 3.15)
 #project(SearchEngine VERSION 0.1.0)
 ## filesystem.h require C++17
