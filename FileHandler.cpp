@@ -1,4 +1,7 @@
 #include "FileHandler.h"
+#include "IndexHandler.h"
+#include "IndexEntry.h"
+
 
 using namespace std;
 
@@ -87,40 +90,43 @@ void FileHandler::queryTreeNotWords(const string& word) {
     }
 }
 
-// void FileHandler::queryHashPersons(const string&person){
-//     // get set
-//     set<string>* temp = i.getDocsFromHashPerson(person);
 
-//     // check if set is empty
-//     if(temp==NULL){
-//         intersect.clear();
-//     }else{
-//         // copy intersect set and clear old
-//         set<string> temp2 = intersect;
-//         intersect.clear();
+void FileHandler::queryPersons(const string&person){
+    // get set
+    unordered_set<string> temp = i.getDocFromPerson(person);
+    unordered_set<string> emptySet;
+    // check if set is empty
+    if(temp==emptySet){
+        intersect.clear();
+    }else{
+        // copy intersect set and clear old
+        set<string> temp2 = intersect;
+        intersect.clear();
 
-//         // intersect
-//         set_intersection(temp->begin(),temp->end(),temp2.begin(),
-//                          temp2.end(),inserter(intersect,intersect.begin()));
-//     }
-// }
+        // intersect
+        set_intersection(temp.begin(),temp.end(),temp2.begin(),
+                         temp2.end(),inserter(intersect,intersect.begin()));
+    }
+}
 
-//  void FileHandler::queryHashOrgs(const string&person){
-//     // get set
-//     set<string>* temp = i.getDocsFromHashOrgs(person);
+void FileHandler::queryOrgs(const string&orgs){
+    // get set
+    unordered_set<string> temp = i.getDocFromOrgs(orgs);
+    unordered_set<string> emptySet;
+    // check if set is empty
+    if(temp==emptySet){
+        intersect.clear();
+    }else{
+        // copy intersect set and clear old
+        set<string> temp2 = intersect;
+        intersect.clear();
 
-//     // check if set is empty
-//     if(temp==NULL){
-//         intersect.clear();
-//     }else{
-//         // copy intersect set and clear old
-//         set<string> temp2 = intersect;
-//         intersect.clear();
-//         // intersect
-//         set_intersection(temp->begin(),temp->end(),temp2.begin(),
-//                          temp2.end(),inserter(intersect,intersect.begin()));
-//     }
-// }
+        // intersect
+        set_intersection(temp.begin(),temp.end(),temp2.begin(),
+                         temp2.end(),inserter(intersect,intersect.begin()));
+    }
+}
+
 
 void FileHandler::outputResults(){
     top15Sets();
