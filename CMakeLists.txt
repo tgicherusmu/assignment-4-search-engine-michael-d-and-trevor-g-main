@@ -1,6 +1,6 @@
 #Trevor's Cmake list that works with CLion
 cmake_minimum_required(VERSION 3.0.0)
- project(porter2-stemmer)
+ project(porter2_stemmer)
 
  option(USE_LIBCXX "Use libc++ for the C++ standard library" ON)
 
