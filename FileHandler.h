@@ -41,19 +41,14 @@ public:
     void queryPersons(const string &person);
     void queryOrgs(const string &orgs);
 
-
-
-
-
-
     // output resulting set
     void outputResults();
     void getTop50Words();
 
-     int getNumWords(){ return i.getNumWords();};
-//     void getTreeSize(){};
-//     void getNumUniquePersons(){};
-//     void getNumUniqueOrgs(){};
+//    int getNumWords(){ return i.getNumWords();};
+//    int getTreeSize(){ return i.getTreeSize();};
+//    int getNumUniquePersons(){};
+//    int getNumUniqueOrgs(){};
 
     void loadPersonIndex(){ i.loadPersistenceFileIndexPersons();};
     void loadOrgsIndex(){ i.loadPersistenceFileIndexOrgs();};
@@ -68,9 +63,7 @@ public:
 
     void top15Sets();
     void clear();
-
-
-
+    
     void viewDoc(const int);
     void clearTop15(){ top15.clear();}
 
