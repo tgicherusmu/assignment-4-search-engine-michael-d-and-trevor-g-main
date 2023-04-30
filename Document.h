@@ -24,9 +24,8 @@ class Document {
     vector<string> people;
     vector<string> orgs; 
     //Delete rapidjson document, instead when making document object pass json document by reference and automatically fill all the strings  in .h file (doing this in constructor)
-    //rapidjson::Document d;
 
-    explicit Document(const string& filepath) { //todo: test this constructor
+    explicit Document(const string& filepath) { //constructor
         FileName = filepath;
         ifstream f(filepath);
         rapidjson::IStreamWrapper wrap(f);
@@ -42,13 +41,13 @@ class Document {
 
         for (auto& person : d["entities"]["persons"].GetArray()) {
             string name = person["name"].GetString();
-            //todo: clean name, make sure it is all lowercase and replace spaces with '-'
+            
             people.emplace_back(name);
         }
 
         for (auto& organ : d["entities"]["organizations"].GetArray()) {
             string name = organ["name"].GetString();
-            //todo: clean name, make sure it is all lowercase and replace spaces with '-'
+            
             orgs.emplace_back(name);
         }
     };
