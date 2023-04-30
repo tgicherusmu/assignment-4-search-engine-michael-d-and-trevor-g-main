@@ -8,9 +8,6 @@
 using namespace std;
 namespace fs = std::__fs::filesystem;
 
-// todo: test AVL Tree building, test IndexEntry constructor
-
-
 FileHandler files;
 bool parsed = false;
 int avgNumWords=0;
@@ -18,7 +15,7 @@ int readInFiles(const string&);
 void getSearch();
 int main(int argc, char* argv[]) {
     // read in files and create avl tree
-    //string path = "/home/cullenog/smalldataset";
+
     string path;
 
     int option=0;
@@ -40,13 +37,9 @@ int main(int argc, char* argv[]) {
             // create index
             case 1:
                 if(!parsed){
-
                     cout<<"  Enter path to the dataset: ";
                     getline(cin,path);
                     numOfFiles = readInFiles(path);
-
-
-
                 }
                 else{
                     cout<<"\nFiles already loaded!\n";
@@ -63,9 +56,6 @@ int main(int argc, char* argv[]) {
                 cout<<"\nSearch Engine Statistics\n";
                 cout<<"  Total number of individual articles indexed: "<<numOfFiles<<endl;
                 cout<<"  Average number of words indexed per article: "<<avgNumWords<<endl;
-//                cout<<"  Total number of unique words: "<<files.getTreeSize()<<endl;
-//                cout<<"  Total number of unique persons: "<<files.getNumUniquePersons()<<endl;
-//                cout<<"  Total number of unique organizations: "<<files.getNumUniqueOrgs()<<endl;
                 cout<<"  50 most frequent words (stemmed version): "<<endl;
                 files.getTop50Words();
                 break;
@@ -82,7 +72,6 @@ int main(int argc, char* argv[]) {
                     avgNumWords = 0;
                     numOfFiles = 0;
                 }
-
                 break;
             default: option =-1;
         }
@@ -114,7 +103,6 @@ int readInFiles(const string& path){
         cout<<"Complete!\n";
         parsed = true;
         files.setNumFiles(totalNumFiles);
-        //avgNumWords = files.getNumWords() / totalNumFiles;
         return totalNumFiles;
     }
 }
@@ -124,16 +112,13 @@ void getSearch(){
     cout<<"\nEnter search query: ";
     getline(cin,search);
 
-
-
-    // put search phrase into ss
+    //put search phrase into ss
     stringstream ss(search);
     string word;
 
-    // var to show if the word is an identifier
+    //show if the word is an identifier
     int option;
     int count=0;
-
     int check=1;
 
     // get every word in the phrase
