@@ -1,5 +1,13 @@
 #include "IndexHandler.h"
 #include "FilterEntry.h"
+#include "Tree.h"
+#include <utility>
+#include<vector>
+#include <iostream>
+#include<unordered_map>
+#include <set>
+#include <algorithm>
+#include "IndexEntry.h"
 // list of stop words
 //CODE REVIEW COMMENTS:
 //remove non alpha characters
@@ -197,6 +205,29 @@ set<string> IndexHandler::getDocsFromTree(const string& word) {
     }
 }
 
+
+unordered_set<string> IndexHandler::getDocFromPerson(const string& word) {
+    auto it = PeopleTree.getEntry(word);
+    if(!(it == FilterEntry())){
+        return it.uuidSet;
+    }
+    else{
+        unordered_set<string>emptySet;
+        return emptySet;
+    }
+}
+
+unordered_set<string> IndexHandler::getDocFromOrgs(const string& word) {
+    auto it = OrgsTree.getEntry(word);
+    if(!(it == FilterEntry())){
+        return it.uuidSet;
+    }
+    else{
+        unordered_set<string>emptySetTwo;
+        return emptySetTwo;
+    }
+}
+
 //CODE REVIEW COMMENT: change all to unordered set
 
 void IndexHandler::loadPersistenceFileIndexPersons() {
@@ -214,9 +245,9 @@ void IndexHandler::loadPersistenceFileIndexPersons() {
         getline(ss, word, ',');
 
         string docs;
-        // while(getline(ss,docs,',')){
-        //     hashTablePersons.insert(word,docs);
-        // }
+         while(getline(ss,docs,',')){
+             PeopleTree.insertFilter(FilterEntry(word, docs));
+         }
     }
     file.close();
 }
@@ -224,7 +255,7 @@ void IndexHandler::loadPersistenceFileIndexPersons() {
 
 
 void IndexHandler::loadPersistenceFileIndexOrgs() {             // load the orgs file
-    ifstream file("/home/pc/persistence_index/orgsindex.txt");  // open the file
+    ifstream file("/Users/trevorgicheru/persistence_index/orgsindex.txt");  // open the file
     if (file.is_open()) {
         string line;
         while (getline(file, line)) {
@@ -235,78 +266,79 @@ void IndexHandler::loadPersistenceFileIndexOrgs() {             // load the orgs
             getline(ss, word, ',');
 
             string docs;
-            // while(getline(ss,docs,',')){
-            //     hashTableOrgs.insert(word,docs);
-            // }
+            while (getline(ss, docs, ',')) {
+                OrgsTree.insertFilter(FilterEntry(word, docs));
+             }
+            }
+            file.close();
+        } else {
+            cout << "Persistence file (ORGS) not found." << endl
+                 << endl;
         }
-        file.close();
-    } else {
-        cout << "Persistence file (ORGS) not found." << endl
-             << endl;
     }
-}
+
 
 // loading files from
-void IndexHandler::loadPersistenceFileIndexWords() {
-    ifstream file("/home/pc/persistence_index/wordindex.txt");
-    if (file.is_open()) {
-        string line;
-        while (getline(file, line)) {
-            stringstream ss(line);
+    void IndexHandler::loadPersistenceFileIndexWords() {
+        ifstream file("/Users/trevorgicheru/persistence_index/wordindex.txt");
+        if (file.is_open()) {
+            string line;
+            while (getline(file, line)) {
+                stringstream ss(line);
 
-            // get the word
-            string word;
-            getline(ss, word, ',');
+                // get the word
+                string word;
+                getline(ss, word, ',');
 
-            // get # docs
-            string numDocs;
-            int numDocsInt;
-            getline(ss, numDocs, ',');
-            numDocsInt = stoi(numDocs);
-            IndexEntry idx(word);
+                // get # docs
+                string numDocs;
+                int numDocsInt;
+                getline(ss, numDocs, ',');
+                numDocsInt = stoi(numDocs);
+                IndexEntry idx(word);
 
-            string fileName, freqStr;
-            int freq;
-            for (int i = 0; i < numDocsInt; i++) {
-                getline(ss, fileName, ',');
-                getline(ss, freqStr, ',');
-                freq = stoi(freqStr);
+                string fileName, freqStr;
+                int freq;
+                for (int i = 0; i < numDocsInt; i++) {
+                    getline(ss, fileName, ',');
+                    getline(ss, freqStr, ',');
+                    freq = stoi(freqStr);
 
 //                idx.docNameSetInsert(fileName);         // insert the file name into the set
-                idx.docNamesMapInsert(fileName, freq);  // insert the file name and the frequency into the map
+                    idx.docNamesMapInsert(fileName, freq);  // insert the file name and the frequency into the map
+                }
+                TreeIndex.insert(idx);
             }
-            TreeIndex.insert(idx);
+            file.close();
+        } else {
+            cout << "Persistence file (WORDS) not found." << endl
+                 << endl;
         }
-        file.close();
-    } else {
-        cout << "Persistence file (WORDS) not found." << endl
-             << endl;
     }
-}
 
 // saving info that can be used for late retrieval
-void IndexHandler::savePersistenceFileIndexPersons() {
-    ofstream open("/home/pc/persistence_index/personsindex.txt");
-    // hashTablePersons.output(open);
-    open.close();
-}
-void IndexHandler::savePersistenceFileIndexOrgs() {
-    ofstream open("/home/pc/persistence_index/orgsindex.txt");
-    // hashTableOrgs.output(open);
-    open.close();
-}
-void IndexHandler::savePersistenceFileIndexWords() {
-    ofstream open("/home/pc/persistence_index/wordindex.txt");
-    TreeIndex.prettyPrintTree();
-}
+    void IndexHandler::savePersistenceFileIndexPersons() {
+        ofstream open("/home/pc/persistence_index/personsindex.txt");
+        PeopleTree.prettyPrintTree();
+        open.close();
+    }
+    void IndexHandler::savePersistenceFileIndexOrgs() {
+        ofstream open("/home/pc/persistence_index/orgsindex.txt");
+        OrgsTree.prettyPrintTree();
+        open.close();
+    }
+    void IndexHandler::savePersistenceFileIndexWords() {
+        ofstream open("/home/pc/persistence_index/wordindex.txt");
+        TreeIndex.prettyPrintTree();
+    }
 
 // resetting tree
-void IndexHandler::clear() {
-    TreeIndex.clearElements();
-    numWords = 0;
-    treeSize = 0;
+    void IndexHandler::clear() {
+        TreeIndex.clearElements();
+        numWords = 0;
+        treeSize = 0;
 
-    // todo clear hash tables
-    //  hashTableOrgs.clear();
-    //  hashTablePersons.clear();
-}
+        // todo clear hash tables
+        //  hashTableOrgs.clear();
+        //  hashTablePersons.clear();
+    }
