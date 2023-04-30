@@ -1,16 +1,12 @@
 #include <iostream>
-#include <filesystem>
+#include<filesystem>
 #include "FileHandler.h"
 #include <sstream>
 #include <algorithm>
 #include<limits>
 #include <sys/stat.h>
-#include "IndexHandler.h"
-//#include "UserInterface.h"
-
 using namespace std;
 namespace fs = std::__fs::filesystem;
-
 
 // todo: test AVL Tree building, test IndexEntry constructor
 
@@ -56,7 +52,7 @@ int main(int argc, char* argv[]) {
                     cout<<"\nFiles already loaded!\n";
                 }
                 break;
-           // output search results
+                // output search results
             case 2:
                 if(parsed)
                     getSearch();
@@ -67,9 +63,9 @@ int main(int argc, char* argv[]) {
                 cout<<"\nSearch Engine Statistics\n";
                 cout<<"  Total number of individual articles indexed: "<<numOfFiles<<endl;
                 cout<<"  Average number of words indexed per article: "<<avgNumWords<<endl;
-                //cout<<"  Total number of unique words: "<<files.getTreeSize()<<endl;
-                //cout<<"  Total number of unique persons: "<<files.getNumUniquePersons()<<endl;
-                //cout<<"  Total number of unique organizations: "<<files.getNumUniqueOrgs()<<endl;
+//                cout<<"  Total number of unique words: "<<files.getTreeSize()<<endl;
+//                cout<<"  Total number of unique persons: "<<files.getNumUniquePersons()<<endl;
+//                cout<<"  Total number of unique organizations: "<<files.getNumUniqueOrgs()<<endl;
                 cout<<"  50 most frequent words (stemmed version): "<<endl;
                 files.getTop50Words();
                 break;
@@ -118,7 +114,7 @@ int readInFiles(const string& path){
         cout<<"Complete!\n";
         parsed = true;
         files.setNumFiles(totalNumFiles);
-        avgNumWords = files.getNumWords() / totalNumFiles;
+        //avgNumWords = files.getNumWords() / totalNumFiles;
         return totalNumFiles;
     }
 }
@@ -161,14 +157,14 @@ void getSearch(){
         }else if(word=="NOT"){
             option = 3;
         }
-        // search word
+            // search word
         else{
             if(count==0)
                 files.setMainWord(word);
             // AND
             if(check==1)
                 option = 0;
-            // OR
+                // OR
             else {
                 option = 4;
             }
@@ -180,21 +176,21 @@ void getSearch(){
                 files.queryTreeWords(word, count, 1);
                 break;
             }
-            // OR
+                // OR
             case 4:{
                 files.queryTreeWords(word, count, 2);
                 break;
             }
-            // get next word if it's an identifier
+                // get next word if it's an identifier
             case 1:{
                 // can't use alone
                 getline(ss,word,' ');
-                files.queryPersons(word);
+                //files.queryHashPersons(word);
                 break;
             }
             case 2:{
                 getline(ss,word,' ');
-                files.queryOrgs(word);
+                //files.queryHashOrgs(word);
                 break;
             }
             case 3:{
