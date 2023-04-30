@@ -6,7 +6,7 @@ LINKER = clang++ -std=c++11 -Wall -pedantic -I.
 
 all: $(EXE)
 
-$(EXE): $(OBJS) main.cpp
+$(EXE): $(OBJS) QHUI.cpp
 	$(LINKER) main.cpp -o $@ $(OBJS)
 
 porter2_stemmer.o: porter2_stemmer.h porter2_stemmer.cpp
