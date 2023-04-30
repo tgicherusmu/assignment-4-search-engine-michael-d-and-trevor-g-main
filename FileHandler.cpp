@@ -65,9 +65,6 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
 
 }
 
-
-
-
 //queryTree will then update the word and get documents for the word then checks if this i the first word being checked or not
 void FileHandler::queryTreeNotWords(const string& word) {
 
@@ -129,7 +126,6 @@ void FileHandler::queryOrgs(const string&orgs){
     }
 }
 
-
 void FileHandler::outputResults(){
     top15Sets();
     int k=1;
@@ -150,7 +146,6 @@ void FileHandler::outputResults(){
         intersect.clear();
     }
 }
-
 
 void FileHandler::top15Sets(){
 
@@ -196,7 +191,6 @@ void FileHandler::clear() {
     mainWord="";
 
     i.clear();
-
 }
 
 void FileHandler::viewDoc(const int choice) {
