@@ -37,18 +37,12 @@ public:
     void queryHashPersons(const string&);
     void queryHashOrgs(const string&);
     unordered_set<string> temp;
-    //set<string> getDocsByPerson(const string &person);
     void queryPersons(const string &person);
     void queryOrgs(const string &orgs);
 
     // output resulting set
     void outputResults();
     void getTop50Words();
-
-//    int getNumWords(){ return i.getNumWords();};
-//    int getTreeSize(){ return i.getTreeSize();};
-//    int getNumUniquePersons(){};
-//    int getNumUniqueOrgs(){};
 
     void loadPersonIndex(){ i.loadPersistenceFileIndexPersons();};
     void loadOrgsIndex(){ i.loadPersistenceFileIndexOrgs();};
@@ -66,6 +60,5 @@ public:
     
     void viewDoc(const int);
     void clearTop15(){ top15.clear();}
-
 };
 #endif
