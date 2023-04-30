@@ -1,3 +1,4 @@
+#Trevor's Cmake list that works with CLion
 cmake_minimum_required(VERSION 3.0.0)
  project(porter2-stemmer)
 
@@ -157,6 +158,7 @@ cmake_minimum_required(VERSION 3.0.0)
  add_executable(superSearch QHUI.cpp Document.h FileHandler.cpp IndexEntry.cpp IndexHandler.cpp porter2_stemmer.cpp QueryEngine.cpp Tree.h FilterEntry.h queryHandlerAndUI.cpp queryHandlerAndUI.h)
  target_link_libraries(superSearch porter2-stemmer)
 
+#TA Michael's Cmake list
 #cmake_minimum_required(VERSION 3.15)
 #project(SearchEngine VERSION 0.1.0)
 ## filesystem.h require C++17
@@ -173,3 +175,16 @@ cmake_minimum_required(VERSION 3.0.0)
 #target_include_directories(RapidJSONExample PRIVATE rapidjson/)
 #target_include_directories(superSearch PRIVATE rapidjson/)
 #set(CMAKE_VERBOSE_MAKEFILE OFF)
+
+#TA Adam's Cmake list
+#cmake_minimum_required(VERSION 3.15)
+#project(Assignment-4 VERSION 0.1.0)
+#set(CMAKE_CXX_STANDARD 17)
+#include(CTest)
+#enable_testing()
+#add_executable(Assignent-4 main.cpp)
+#add_executable(superSearch QHUI.cpp Document.h FileHandler.cpp IndexEntry.cpp IndexHandler.cpp porter2_stemmer.cpp QueryEngine.cpp Tree.h FilterEntry.h)
+#target_link_libraries(superSearch porter2-stemmer)
+#set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+#set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+#include(CPack)
