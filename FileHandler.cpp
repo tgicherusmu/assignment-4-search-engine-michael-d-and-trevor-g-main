@@ -63,7 +63,7 @@ void FileHandler::queryTreeWords(string word, int count, const int& type){
     }
 
 
-}// todo clear sets to do multiple searchs and reset p/o/w
+}
 
 
 
@@ -144,7 +144,6 @@ void FileHandler::outputResults(){
             char esc_char = 27;
             cout<<esc_char<<"[1m"<<doc.title<<esc_char<<"[0m"<<endl;
             cout<<doc.site.substr(0,10)<<" — ";
-            //cout<<doc.textBlurb<<endl<<endl;;
 
             k++;
         }
