@@ -1,4 +1,4 @@
-Documentation file with timeframe ,uml, and spudeo code explaination: [Documentation.docx](https://github.com/tgicherusmu/assignment-4-search-engine-michael-d-and-trevor-g-main/files/11391577/Documentation.docx)
+Documentation file with timeframe ,uml, and pseudo code explaination: [Documentation.docx](https://github.com/tgicherusmu/assignment-4-search-engine-michael-d-and-trevor-g-main/files/11391577/Documentation.docx)
 
 Check UML Folder for UML tree: (screenshot:)[Search Engine UML.pdf](https://github.com/tgicherusmu/assignment-4-search-engine-michael-d-and-trevor-g-main/files/11391556/Search.Engine.UML.pdf)
 
