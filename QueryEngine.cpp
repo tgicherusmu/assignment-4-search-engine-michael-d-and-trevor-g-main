@@ -15,4 +15,5 @@ string QueryEngine::getStemmedWord() {
     // get stemmed version of word
     Porter2Stemmer::trim(Word);
     Porter2Stemmer::stem(Word);
+    return Word;
 }
