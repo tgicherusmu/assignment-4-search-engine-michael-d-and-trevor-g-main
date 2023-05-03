@@ -101,10 +101,9 @@ void IndexHandler::addDoc(const Document& doc) {
     // extract the words
     string word;
     while (ss >> word) {
-        //CODE REVIEW COMMENTS (NEED TO CLEAN TO MAKE TREE SMALLER):
-        //see if word is in stoplist
-        //make everything in word lower case to clean
-        //remove all non alpha character or just remove commas and periods from the end and beginning of words
+        //todo:
+            //make everything in word lower case to clean
+            //remove all non alpha character or just remove commas and periods from the end and beginning of words
         auto it = theStopWords.find(word);  // check if word is in stoplist
         if (it != theStopWords.end()) {     // if it is in the stoplist, continue
             continue;
@@ -113,24 +112,20 @@ void IndexHandler::addDoc(const Document& doc) {
         // TA Adam E:  you only want to increment the number of words every time you find a new word? right now, you incremenet for every word you have
 //        numWords++;  // increment number of words
         // check if word has been hashed
-        auto it2 = theHashedWords.find(word);  // check if word is in theHashedWords
-        if (it2 != theHashedWords.end()) {     // if it is in theHashedWords, continue
-            word = theHashedWords[word];       // set word to the hashed version of the word
-
-        } else {  //
-            // get stemmed version of word
-            string temp = word;
-            //Porter2Stemmer::trim(word);
-            Porter2Stemmer::stem(word);
-            // add to table
-            theHashedWords[temp] = word;
-            theHashedWords[word] = word;
-        }
-
-        // continue if word is empty
-        if (word.empty())
-            continue;
-
+//        auto it2 = theHashedWords.find(word);  // check if word is in theHashedWords
+//        if (it2 != theHashedWords.end()) {     // if it is in theHashedWords, continue
+//            word = theHashedWords[word];       // set word to the hashed version of the word
+//
+//        } else {  //
+//            // get stemmed version of word
+//            string temp = word;
+//            //Porter2Stemmer::trim(word);
+//            Porter2Stemmer::stem(word);
+//            // add to table
+//            theHashedWords[temp] = word;
+//            theHashedWords[word] = word;
+//        }
+        Porter2Stemmer::stem(word);
         auto iter = wordMap.emplace(word, 0);
         iter.first->second++;
 
@@ -195,14 +190,19 @@ void IndexHandler::getTop50Words() {
 
 set<string> IndexHandler::getDocsFromTree(const string& word) {
     IndexEntry result = TreeIndex.getEntry(word);  // get the index entry
-    if (result.getDocNamesSet().empty()) {                       // if the word is not in the tree, return an empty set
-        // cout<<"No docs for that word found ("<<word<<") \n";
-        return set<string>();
-    } else {                                                      // if the word is in the tree, return the set of docs
-        // cout<<"Docs for that word found ("<<word<<") \n";
-        // cout<<result<<endl;
-        return result.getDocNamesSet();
+//    if (result.getDocNamesSet().empty()) {                       // if the word is not in the tree, return an empty set
+//        // cout<<"No docs for that word found ("<<word<<") \n";
+//        return set<string>();
+//    } else {                                                      // if the word is in the tree, return the set of docs
+//        // cout<<"Docs for that word found ("<<word<<") \n";
+//        // cout<<result<<endl;
+//        return result.getDocNamesSet();
+//    }
+    set<string> answer;
+    for (auto& element : result.uuidMap) {
+        answer.insert(element.first);
     }
+    return answer;
 }
 
 
