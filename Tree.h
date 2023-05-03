@@ -1,7 +1,7 @@
 
 #ifndef TREE_H
 #define TREE_H
-#define DEBUG
+//#define DEBUG
 #include "IndexEntry.h"
 #include "FilterEntry.h"
 
@@ -274,7 +274,7 @@ private:
         else
         {
             for (auto& item: x.uuidMap) {
-                t->key.uuidMap.emplace(item);
+                t->key.uuidMap.insert(item);
             }
         }
 
