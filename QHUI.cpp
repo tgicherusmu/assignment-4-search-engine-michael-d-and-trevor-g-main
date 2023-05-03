@@ -1,6 +1,7 @@
 #include <iostream>
 #include<filesystem>
 #include "FileHandler.h"
+#include "porter2_stemmer.h"
 #include <sstream>
 #include <algorithm>
 #include<limits>
@@ -126,64 +127,90 @@ void getSearch(){
         if(word=="AND"){
             // get next word
             getline(ss,word,' ');
-            files.setMainWord(word);
+            Porter2Stemmer::stem(word);
+            files.addAndWord(word);
             option = 0;
         }else if(word=="OR"){
             // get next word
             getline(ss,word,' ');
-            files.setMainWord(word);
+            Porter2Stemmer::stem(word);
+            files.addOrWord(word);
 
             option = 4;
             check = 2;
         }else if(word=="PERSON"){
+            getline(ss,word,' ');
+            files.addPerson(word);
             option = 1;
         }else if(word=="ORG"){
+            getline(ss,word,' ');
+            files.addOrgan(word);
             option = 2;
         }else if(word=="NOT"){
+            getline(ss,word,' ');
+            Porter2Stemmer::stem(word);
+            files.addNotWord(word);
             option = 3;
         }
             // search word
         else{
-            if(count==0)
-                files.setMainWord(word);
-            // AND
-            if(check==1)
-                option = 0;
-                // OR
-            else {
-                option = 4;
+            //query was not formatted correctly
+            cout<<"Your Query was not formatted correctly.";
+            cout<<"Would you like to search again? (y/n): ";
+            char choice;
+            cin>>choice;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if(choice =='y'||choice =='Y'){
+                getSearch();
             }
+
+//            if(count==0) {
+//                Porter2Stemmer::stem(word);
+//                files.setMainWord(word);
+//            }
+//            // AND
+//            if(check==1)
+//                option = 0;
+//                // OR
+//            else {
+//                option = 4;
+//            }
         }
 
-        switch(option){
-            // AND
-            case 0:{
-                files.queryTreeWords(word, count, 1);
-                break;
-            }
-                // OR
-            case 4:{
-                files.queryTreeWords(word, count, 2);
-                break;
-            }
-                // get next word if it's an identifier
-            case 1:{
-                // can't use alone
-                getline(ss,word,' ');
-                //files.queryHashPersons(word);
-                break;
-            }
-            case 2:{
-                getline(ss,word,' ');
-                //files.queryHashOrgs(word);
-                break;
-            }
-            case 3:{
-                getline(ss,word,' ');
-                //files.queryTreeNotWords(word);
-                break;
-            }
-        }
+//        switch(option){
+//            // AND
+//            case 0:{
+//                Porter2Stemmer::stem(word);
+//                files.queryTreeWords(word, count, 1);
+//                break;
+//            }
+//                // OR
+//            case 4:{
+//                Porter2Stemmer::stem(word);
+//                files.queryTreeWords(word, count, 2);
+//                break;
+//            }
+//                // get next word if it's an identifier
+//            case 1:{
+//                // can't use alone
+//                Porter2Stemmer::stem(word);
+//                getline(ss,word,' ');
+//                //files.queryHashPersons(word);
+//                break;
+//            }
+//            case 2:{
+//                Porter2Stemmer::stem(word);
+//                getline(ss,word,' ');
+//                //files.queryHashOrgs(word);
+//                break;
+//            }
+//            case 3:{
+//                Porter2Stemmer::stem(word);
+//                getline(ss,word,' ');
+//                //files.queryTreeNotWords(word);
+//                break;
+//            }
+//        }
         count++;
     }
     // output the result
