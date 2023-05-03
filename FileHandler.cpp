@@ -8,6 +8,7 @@ using namespace std;
 void FileHandler::updateIndex(const string&file){ //updateIndex parses components in string file
     // parses doc
     Document doc(file);
+    pathMap[doc.uuid] = file;
     i.addDoc(doc);
 
     // add persons
@@ -17,112 +18,101 @@ void FileHandler::updateIndex(const string&file){ //updateIndex parses component
 }
 
 //queryTreeWord takes in string words, integers count, and integer type
-void FileHandler::queryTreeWords(string word, int count, const int& type){
-    // update word
-    q.changeWord(word);
-    string query = q.getStemmedWord();
-
-    // get docs for word
-    set<string> temp = i.getDocsFromTree(query);
-
-    // check if this is the first word being searched
-    if(count!=0){
-        // check if set is empty
-        if(temp.empty()){
-            // clear intersect if AND search
-            if(type==1){
-                intersect.clear();
-            }
-            return;
-        }
-
-        if(type==1){
-            // copy intersect set and clear to be able to form new intersect
-            set<string> temp2 = intersect;
-            intersect.clear();
-
-            // get intersection of old and new set
-            set_intersection(temp.begin(),temp.end(),temp2.begin(),
-                             temp2.end(),inserter(intersect,intersect.begin()));
-        } // OR
-        else if(type==2){
-            // insert all elements into main set
-            for(const auto& e: temp){
-                intersect.insert(e);
-
-            }
-        }
-
-    }
-    // first word being searched
-    else{
-        // assign set to intersect
-        if(!temp.empty()){
-            intersect = temp;
-        }
+void FileHandler::queryTreeAndWords(){
+    if(andWords.empty()){
+        return;
     }
 
+    auto iter = andWords.begin();
+    if(intersect.empty()) {
+        intersect.merge(i.getDocsFromTree(*iter));
+        iter++;
+    }
+    while(iter != andWords.end()){
+        set<string> copy = intersect;
+        intersect.clear();
+        set<string> tempy = i.getDocsFromTree(*iter);
+        set_intersection(tempy.begin(),tempy.end(),copy.begin(),
+                         copy.end(),inserter(intersect,intersect.begin()));
+        iter++;
+    }
+}
 
+void FileHandler::queryTreeOrWords(){
+    if(orWords.empty()){
+        return;
+    }
+
+    for (auto& word: orWords) {
+        set<string> tempy = i.getDocsFromTree(word);
+        intersect.merge(tempy);
+    }
 }
 
 //queryTree will then update the word and get documents for the word then checks if this i the first word being checked or not
-void FileHandler::queryTreeNotWords(const string& word) {
-
-    // update word
-    q.changeWord(word);
-    string query = q.getStemmedWord();
-
-    // get docs
-    set<string> temp = i.getDocsFromTree(query);
-
-    // check if set is empty
-    if (temp.empty()) {
+void FileHandler::queryTreeNotWords() {
+    if(notWords.empty()){
         return;
-    } else {
-        // copy intersect set and clear old
-        set<string> temp2 = intersect;
-        intersect.clear();
+    }
 
-        // remove docs with word (order matters)
-        set_difference(temp2.begin(), temp2.end(), temp.begin(),
-                       temp.end(), inserter(intersect, intersect.begin()));
+    auto iter = notWords.begin();
+    while(iter != notWords.end()){
+        set<string> copy = intersect;
+        set<string> toRemove;
+        set<string> tempy = i.getDocsFromTree(*iter);
+        set_intersection(tempy.begin(),tempy.end(),copy.begin(),
+                         copy.end(),inserter(toRemove,toRemove.begin()));
+        for (auto& notUUID: toRemove) {
+            intersect.erase(notUUID);
+        }
+        iter++;
     }
 }
 
 
-void FileHandler::queryPersons(const string&person){
-    // get set
-    unordered_set<string> temp = i.getDocFromPerson(person);
-    unordered_set<string> emptySet;
-    // check if set is empty
-    if(temp==emptySet){
-        intersect.clear();
-    }else{
-        // copy intersect set and clear old
-        set<string> temp2 = intersect;
-        intersect.clear();
+void FileHandler::queryPersons(){
+    if(people.empty()){
+        return;
+    }
 
-        // intersect
-        set_intersection(temp.begin(),temp.end(),temp2.begin(),
-                         temp2.end(),inserter(intersect,intersect.begin()));
+    auto iter = people.begin();
+    if(intersect.empty()) {
+        unordered_set<string> tempUnoSet = i.getDocFromPerson(*iter);
+        set<string> tempy(tempUnoSet.begin(), tempUnoSet.end());
+        intersect.merge(tempy);
+        iter++;
+    }
+    while(iter != people.end()){
+        unordered_set<string> tempUnoSet = i.getDocFromPerson(*iter);
+        set<string> tempy(tempUnoSet.begin(), tempUnoSet.end());
+        set<string> copy = intersect;
+        intersect.clear();
+        set_intersection(tempy.begin(),tempy.end(),copy.begin(),
+                         copy.end(),inserter(intersect,intersect.begin()));
+        iter++;
     }
 }
 
-void FileHandler::queryOrgs(const string&orgs){
-    // get set
-    unordered_set<string> temp = i.getDocFromOrgs(orgs);
-    unordered_set<string> emptySet;
-    // check if set is empty
-    if(temp==emptySet){
-        intersect.clear();
-    }else{
-        // copy intersect set and clear old
-        set<string> temp2 = intersect;
-        intersect.clear();
+void FileHandler::queryOrgs(){
+    if(organs.empty()){
+        return;
+    }
 
-        // intersect
-        set_intersection(temp.begin(),temp.end(),temp2.begin(),
-                         temp2.end(),inserter(intersect,intersect.begin()));
+    auto iter = organs.begin();
+    if(intersect.empty()) {
+        unordered_set<string> tempUnoSet = i.getDocFromOrgs(*iter);
+        set<string> tempy(tempUnoSet.begin(), tempUnoSet.end());
+        intersect.merge(tempy);
+        iter++;
+    }
+    while(iter != organs.end()){
+        unordered_set<string> tempUnoSet = i.getDocFromOrgs(*iter);
+        set<string> tempy(tempUnoSet.begin(), tempUnoSet.end());
+        set<string> copy = intersect;
+        intersect.clear();
+        set_intersection(tempy.begin(),tempy.end(),copy.begin(),
+                         copy.end(),inserter(intersect,intersect.begin()));
+        iter++;
     }
 }
 
@@ -135,7 +125,7 @@ void FileHandler::outputResults(){
         for(const auto& e: top15){
             if(k>15)
                 break;
-            Document doc(e.docName);
+            Document doc(e.filepath);
             cout<<k<<". "<<doc.site<<endl;
             char esc_char = 27;
             cout<<esc_char<<"[1m"<<doc.title<<esc_char<<"[0m"<<endl;
@@ -148,15 +138,22 @@ void FileHandler::outputResults(){
 }
 
 void FileHandler::top15Sets(){
+    //here is where you initiate the calculation of the intersections
+    intersect.clear();
+    top15.clear();
 
-    string MainWord = mainWord;
-    Porter2Stemmer::trim(MainWord);
-    Porter2Stemmer::stem(MainWord);
+    //fill intersect
+    queryTreeAndWords();
+    queryTreeOrWords();
+    queryTreeNotWords();
+    queryOrgs();
+    queryPersons();
+
     string word;
     stringstream ss;
     double inverseDocFreq = log(double(numFiles) / intersect.size());
     for(const auto&e:intersect){
-        Document doc(e);
+        Document doc(pathMap[e]);
         string temp = doc.text;
         // specific metrics for each doc
         int score=0;
@@ -165,15 +162,15 @@ void FileHandler::top15Sets(){
         // get each word
         ss.str(temp);
         while(ss>>word){
-            Porter2Stemmer::trim(word);
+            //todo: for `word` lowercase and remove non-alpha
             Porter2Stemmer::stem(word);
 
             wordCount++;
-            if(word==MainWord)
+            if(andWords.find(word) != andWords.end() || orWords.find(word) != orWords.end())
                 score++;
         }
         double tf_idf = double(score) / double(wordCount) * inverseDocFreq;
-        docWithMetrc obj(e,tf_idf);
+        docWithMetrc obj(e,tf_idf, pathMap[e]);
         top15.insert(obj);
 
         ss.clear();
@@ -188,7 +185,6 @@ void FileHandler::clear() {
     intersect.clear();
     top15.clear();
     numFiles=0;
-    mainWord="";
 
     i.clear();
 }
@@ -198,7 +194,7 @@ void FileHandler::viewDoc(const int choice) {
     stringstream ss;
     for(const auto& e: top15){
         if(k==choice){
-            Document doc(e.docName);
+            Document doc(pathMap[e.docName]);
             char esc_char = 27;
             cout<<endl;
 
